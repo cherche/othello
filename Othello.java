@@ -20,6 +20,7 @@ public class Othello {
    */
   private int[][] board;
 
+  /*
   public String boardToString() {
     String string = "";
 
@@ -44,6 +45,7 @@ public class Othello {
     othello.place(new int[] {4, 2}, 1);
     System.out.println(othello.boardToString());
   }
+  */
 
   public Othello(int width, int height) {
     this.width = width;
@@ -65,16 +67,11 @@ public class Othello {
    */
   private ArrayList<int[]> place(int[] pos, int attacker) {
     ArrayList<int[]> captures = getCaptures(pos, attacker);
+    setBoardValue(pos, attacker);
 
-    if (captures.size() == 0) {
-      System.out.println("I disapprove.");
-    } else {
-      setBoardValue(pos, attacker);
-
-      for (int i = 0; i < captures.size(); i++) {
-        int[] capture = captures.get(i);
-        setBoardValue(capture, attacker);
-      }
+    for (int i = 0; i < captures.size(); i++) {
+      int[] capture = captures.get(i);
+      setBoardValue(capture, attacker);
     }
 
     return captures;
@@ -109,7 +106,7 @@ public class Othello {
       int dx = dir[0];
       int dy = dir[1];
       int[] pos = {start[0], start[1]};
-      System.out.println("Trying " + format(dir));
+      // System.out.println("Trying " + format(dir));
 
       // I thought about this for a long time and couldn't
       // come up with a nice stopping position
@@ -122,21 +119,25 @@ public class Othello {
         // If it's off the board or empty, this attempt should be discarded
         if (!isInBoard(pos) || getBoardValue(pos) == 0) {
           temp.clear();
-          System.out.println("\tPsych!");
+          // System.out.println("\tPsych!");
           break;
         // If we're back to an attacker tile, we might've found something
         // This is fine even if we just walked one tile over because
         } else if (getBoardValue(pos) == attacker) {
-          System.out.println("\tSuccess.");
+          // System.out.println("\tSuccess.");
           break;
         }
 
         // If we don't clone it, the position we mean to add will get mutated
         // in the next iteration of the while loop
         temp.add(pos.clone());
-        System.out.println("\tFound " + format(pos));
+        // System.out.println("\tFound " + format(pos));
       }
 
+      // Finally, add everything from the temp list to the captures list
+      // regardless of how many items are in it
+      // This is okay since, if the tile was off the board of empty,
+      // it would have been emptied thereby discarding this attempt
       captures.addAll(temp);
     }
 
@@ -177,6 +178,8 @@ public class Othello {
     int x = pos[0];
     int y = pos[1];
 
+    // This is really self-explanatory
+    // Brackets are actually unnecessary, but it's easy to read now
     return (0 <= x && x < this.width) && (0 <= y && y < this.height);
   }
 
