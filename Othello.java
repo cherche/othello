@@ -59,19 +59,24 @@ public class Othello {
   }
 
   /**
-   * Places a tile on the board without checks for legality
+   * Places a tile on the board with a check for legality
    *
    * @param pos the position where a tile is to be placed
    * @param attacker the id of the placed tile
    * @return all tiles that would be captured if this move were made
    */
-  private ArrayList<int[]> place(int[] pos, int attacker) {
+  public ArrayList<int[]> place(int[] pos, int attacker) {
     ArrayList<int[]> captures = getCaptures(pos, attacker);
-    setBoardValue(pos, attacker);
 
-    for (int i = 0; i < captures.size(); i++) {
-      int[] capture = captures.get(i);
-      setBoardValue(capture, attacker);
+    // Basically,if you didn't capture anything, it won't place the tile
+    // Users will have to check for this themselves with the return value
+    if (captures.size() > 0) {
+      setBoardValue(pos, attacker);
+
+      for (int i = 0; i < captures.size(); i++) {
+        int[] capture = captures.get(i);
+        setBoardValue(capture, attacker);
+      }
     }
 
     return captures;
@@ -84,7 +89,7 @@ public class Othello {
    * @param attacker the id of the placed tile
    * @return all tiles that would be captured if this move were made
    */
-  private ArrayList<int[]> getCaptures(int[] start, int attacker) {
+  public ArrayList<int[]> getCaptures(int[] start, int attacker) {
     ArrayList<int[]> captures = new ArrayList<int[]>();
 
     // We'll use these to search for captured stones
