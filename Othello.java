@@ -14,7 +14,7 @@ public class Othello {
   /**
    * The number of players
    */
-  private int playerCount = 3;
+  private int playerCount = 2;
   /**
    * The width of the board
    */
@@ -28,6 +28,7 @@ public class Othello {
    */
   private int[][] board;
 
+  /*
   public String boardToString() {
     String string = "";
 
@@ -53,7 +54,7 @@ public class Othello {
   }
 
   public static void main(String[] args) {
-    Othello othello = new Othello(8, 8);
+    Othello othello = new Othello(8, 8, 3);
     System.out.println(othello.boardToString());
 
     while (true) {
@@ -63,6 +64,7 @@ public class Othello {
       othello.move(x, y);
     }
   }
+  */
 
   public Othello(int width, int height) {
     this.width = width;
@@ -97,6 +99,7 @@ public class Othello {
     State state = new State();
 
     if (!hasValidMoves()) {
+      state.isValidMove = false;
       state.isSkipped = true;
       increaseTurn();
     // Basically, if you didn't capture anything, it won't place the tile
@@ -116,6 +119,7 @@ public class Othello {
 
       state.updates = new ArrayList<int[]>(updates);
       state.isValidMove = true;
+      state.isSkipped = false;
     }
 
     // Returning the coordinates of the captured tiles makes
@@ -281,7 +285,7 @@ public class Othello {
   private boolean isValidMove(int[] pos, int attacker) {
     // Technically, this may be optimized since getCaptures
     // doesn't stop as soon as it finds a valid move
-    return getCaptures(pos, attacker).size() > 0;
+    return (getBoardValue(pos) == 0) && (getCaptures(pos, attacker).size() > 0);
   }
 
   /**
@@ -309,44 +313,5 @@ public class Othello {
     if (turn == 0) {
       turn = playerCount;
     }
-  }
-
-  /**
-   * A way to emit data after the user attempts to place a tile
-   */
-  public class State {
-    /**
-     * A list of coordinates of all changed tiles
-     */
-    public ArrayList<int[]> updates = null;
-    /**
-     * Whether or not the attempted move was valid
-     */
-    public boolean isValidMove = false;
-    /**
-     * Whether or not the player was skipped since they had not any valid moves
-     */
-    public boolean isSkipped = false;
-
-    public State() {}
-
-    // Just for debugging
-    public String toString() {
-      String string =
-        "isValidMove: " + isValidMove + "\n"
-        + "isSkipped: " + isSkipped;
-
-      if (updates != null) {
-        string += "\nupdates";
-
-        for (int i = 0; i < updates.size(); i++) {
-          int[] update = updates.get(i);
-          string += "\n\t(" + update[0] + ", " + update[1] + ")";
-        }
-      }
-
-      return string;
-    }
-
   }
 }
