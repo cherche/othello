@@ -4,26 +4,20 @@ import java.util.*;
  * A way to emit data after the user attempts to place a tile
  */
 public class State {
-  /**
-   * A list of coordinates of all changed tiles
-   */
   public ArrayList<int[]> updates = null;
-  /**
-   * Whether or not the attempted move was valid
-   */
-  public boolean isValidMove = false;
-  /**
-   * Whether or not the player was skipped since they had not any valid moves
-   */
-  public boolean isSkipped = false;
+  public boolean isDone = false;
+  public int currentTurn;
+  public int nextTurn;
+  public int[] counts;
 
   public State() {}
 
   // Just for debugging
   public String toString() {
     String string =
-      "isValidMove: " + isValidMove + "\n"
-      + "isSkipped: " + isSkipped;
+      "isDone: " + isDone + "\n"
+      + "currentTurn: " + currentTurn
+      + "nextTurn: " + nextTurn;
 
     if (updates != null) {
       string += "\nupdates";
