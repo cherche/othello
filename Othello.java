@@ -7,25 +7,15 @@ import java.util.*;
  * @version 2018-11-29
  */
 public class Othello {
-  /**
-   * The turn number
-   */
+  // Turn does natural counting (starts at one) since
+  // integer arrays are filled with 0 by default,
+  // and we want our board to start empty
+  // If we did something else, we would need to set the
+  // initial values ourselves. That sucks.
   private int turn = 1;
-  /**
-   * The number of players
-   */
   private int playerCount = 2;
-  /**
-   * The width of the board
-   */
   private int width;
-  /**
-   * The height of the board
-   */
   private int height;
-  /**
-   * A 2D array of all tiles on the board
-   */
   private int[][] board;
 
   /*
@@ -66,27 +56,18 @@ public class Othello {
   }
   */
 
-  public Othello(int width, int height) {
-    this.width = width;
-    this.height = height;
-    this.board = new int[width][height];
-    // This is just something rough to try to initialize the board
-    int cWidth = width / 2 - 1;
-    int cHeight = height / 2 - 1;
-    board[cWidth][cHeight] = board[cWidth + 1][cHeight + 1] = 1;
-    board[cWidth + 1][cHeight] = board[cWidth][cHeight + 1] = 2;
-  }
-
   public Othello(int width, int height, int playerCount) {
-    this.playerCount = playerCount;
     this.width = width;
     this.height = height;
+    this.playerCount = playerCount;
     this.board = new int[width][height];
+    /*
     // This is just something rough to try to initialize the board
     int cWidth = width / 2 - 1;
     int cHeight = height / 2 - 1;
     board[cWidth][cHeight] = board[cWidth + 1][cHeight + 1] = 1;
     board[cWidth + 1][cHeight] = board[cWidth][cHeight + 1] = 2;
+    */
   }
 
   /**
