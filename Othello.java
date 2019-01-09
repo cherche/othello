@@ -54,6 +54,10 @@ public class Othello {
     }
     */
     while (true) {
+      System.out.println("---");
+      int[] counts = othello.getCounts();
+      System.out.println("1: " + counts[0]);
+      System.out.println("2: " + counts[1]);
       System.out.println(othello.boardToString());
       System.out.println("# Player " + othello.getTurn());
       int x = IBIO.inputInt("x: ");
@@ -115,6 +119,7 @@ public class Othello {
     // If we cycled through all turns and no one could go,
     // getNextTurn() should have returned -1
     state.isDone = turn == -1;
+    state.counts = getCounts();
     return state;
   }
 
@@ -282,10 +287,11 @@ public class Othello {
       for (int j = 0; j < board[i].length; j++) {
         int tile = board[i][j];
 
+        // Basically, count everything
         if (tile == 0) {
           continue;
         } else {
-          int index = tile--;
+          int index = tile - 1;
           counts[index]++;
         }
       }
