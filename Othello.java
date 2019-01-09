@@ -7,9 +7,21 @@ import java.util.*;
  * @version 2019-01-08
  */
 public class Othello {
+  /**
+   * The turn number
+   */
   private int turn = 0;
+  /**
+   * The number of players
+   */
   private int playerCount = 2;
+  /**
+   * The width of the board
+   */
   private int width;
+  /**
+   * The height of the board
+   */
   private int height;
   // It should be noted that although the turn counter
   // goes from 0 to playerCount, the values in the board go from
@@ -17,6 +29,9 @@ public class Othello {
   // a value of k represents that belonging to player k - 1
   // This is just because the board is, by default, filled with 0s,
   // so we have to make do
+  /**
+   * A 2D array of all spcaes on the board
+   */
   private int[][] board;
 
   /*
@@ -78,14 +93,6 @@ public class Othello {
     this.width = width;
     this.height = height;
     this.board = new int[width][height];
-    /*
-    // This is just something rough to try to initialize the board
-    int cWidth = width / 2 - 1;
-    int cHeight = height / 2 - 1;
-    board[cWidth][cHeight] = board[cWidth + 1][cHeight + 1] = 1;
-    board[cWidth + 1][cHeight] = board[cWidth][cHeight + 1] = 2;
-    board[4][5] = 3;
-    */
   }
 
   public Othello(int width, int height, int playerCount) {
@@ -93,14 +100,6 @@ public class Othello {
     this.height = height;
     this.playerCount = playerCount;
     this.board = new int[width][height];
-    /*
-    // This is just something rough to try to initialize the board
-    int cWidth = width / 2 - 1;
-    int cHeight = height / 2 - 1;
-    board[cWidth][cHeight] = board[cWidth + 1][cHeight + 1] = 1;
-    board[cWidth + 1][cHeight] = board[cWidth][cHeight + 1] = 2;
-    board[4][5] = 3;
-    */
   }
 
   /**
@@ -143,6 +142,11 @@ public class Othello {
     return state;
   }
 
+  /**
+   * Determines the next turn depending on who has valid moves
+   *
+   * @return an integer representing the next turn
+   */
   private int getNextTurn() {
     int nextTurn = turn;
 
@@ -292,6 +296,11 @@ public class Othello {
     return false;
   }
 
+  /**
+   * Determines the tile counts for each player
+   *
+   * @return the tile counts for each player
+   */
   private int[] getCounts() {
     int[] counts = new int[playerCount];
 
