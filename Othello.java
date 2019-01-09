@@ -4,20 +4,22 @@ import java.util.*;
  * Generalization of Reversi/Othello games
  *
  * @author  Ryan Nguyen
- * @version 2018-11-29
+ * @version 2019-01-08
  */
 public class Othello {
-  // Turn does natural counting (starts at one) since
-  // integer arrays are filled with 0 by default,
-  // and we want our board to start empty
-  // If we did something else, we would need to set the
-  // initial values ourselves. That sucks.
-  private int turn = 1;
+  private int turn = 0;
   private int playerCount = 2;
   private int width;
   private int height;
+  // It should be noted that although the turn counter
+  // goes from 0 to playerCount, the values in the board go from
+  // 0 to playerCount + 1, where 0 is an empty space and
+  // a value of k represents that belonging to player k - 1
+  // This is just because the board is, by default, filled with 0s,
+  // so we have to make do
   private int[][] board;
 
+  /*
   public String boardToString() {
     String string = "";
 
@@ -43,7 +45,7 @@ public class Othello {
   }
 
   public static void main(String[] args) {
-    Othello othello = new Othello(8, 8, 2);
+    Othello othello = new Othello(8, 8, 3);
     /*
     State state = othello.makeMove(new int[] {4, 2});
     ArrayList<int[]> updates = state.updates;
@@ -52,12 +54,13 @@ public class Othello {
       int[] update = updates.get(i);
       System.out.println(format(update));
     }
-    */
+    *//*
     while (true) {
       System.out.println("---");
       int[] counts = othello.getCounts();
-      System.out.println("1: " + counts[0]);
-      System.out.println("2: " + counts[1]);
+      System.out.println("0: " + counts[0]);
+      System.out.println("1: " + counts[1]);
+      System.out.println("2: " + counts[2]);
       System.out.println(othello.boardToString());
       System.out.println("# Player " + othello.getTurn());
       int x = IBIO.inputInt("x: ");
@@ -69,19 +72,35 @@ public class Othello {
   public int getTurn() {
     return turn;
   }
+  */
+
+  public Othello(int width, int height) {
+    this.width = width;
+    this.height = height;
+    this.board = new int[width][height];
+    /*
+    // This is just something rough to try to initialize the board
+    int cWidth = width / 2 - 1;
+    int cHeight = height / 2 - 1;
+    board[cWidth][cHeight] = board[cWidth + 1][cHeight + 1] = 1;
+    board[cWidth + 1][cHeight] = board[cWidth][cHeight + 1] = 2;
+    board[4][5] = 3;
+    */
+  }
 
   public Othello(int width, int height, int playerCount) {
     this.width = width;
     this.height = height;
     this.playerCount = playerCount;
     this.board = new int[width][height];
-
+    /*
     // This is just something rough to try to initialize the board
     int cWidth = width / 2 - 1;
     int cHeight = height / 2 - 1;
     board[cWidth][cHeight] = board[cWidth + 1][cHeight + 1] = 1;
     board[cWidth + 1][cHeight] = board[cWidth][cHeight + 1] = 2;
-
+    board[4][5] = 3;
+    */
   }
 
   /**
@@ -93,7 +112,7 @@ public class Othello {
   public State makeMove(int[] pos) {
     // We assume that the move is valid
     State state = new State();
-    int attacker = turn;
+    int attacker = turn + 1;
     // Returning the coordinates of the captured tiles makes
     // rendering a lot easier for the user since they know
     // exactly which tiles must be updated
@@ -107,15 +126,16 @@ public class Othello {
       int y = update[1];
       // Clearly, whenever I make a move, I'm only changing claiming territory
       // As a result, we don't actually need to check what the new board value is
-      // It must always be turn
-      board[x][y] = turn;
+      // It must always be attacker
+      board[x][y] = attacker;
     }
 
     state.updates = updates;
     // The idea is that if we know the current turn and next turn,
     // we know if any turns were skipped, and whether the game is over
     state.currentTurn = turn;
-    state.nextTurn = getNextTurn();
+    turn = getNextTurn();
+    state.nextTurn = turn;
     // If we cycled through all turns and no one could go,
     // getNextTurn() should have returned -1
     state.isDone = turn == -1;
@@ -131,24 +151,17 @@ public class Othello {
     // This way, the game still progresses if everyone's turn
     // (except for the current player's) is skipped
     for (int i = 0; i <= playerCount; i++) {
-      incrementTurn();
+      nextTurn = (nextTurn + 1) % playerCount;
+      int attacker = nextTurn + 1;
 
-      if (hasValidMoves(nextTurn)) {
+      if (hasValidMoves(attacker)) {
         return nextTurn;
       }
     }
 
+    // Basically, this means that we went through everyone and no one could go
+    // Game over.
     return -1;
-  }
-
-  private void incrementTurn() {
-    // This next bit is just a way to cycle through the possible turns
-    // This is a disadvantage ot starting to count at 1
-    turn = (turn + 1) % playerCount;
-
-    if (turn == 0) {
-      turn = playerCount;
-    }
   }
 
   /**
@@ -232,7 +245,7 @@ public class Othello {
    * @param pos a position on the board
    * @return a boolean of whether the position is in the board
    */
-  private boolean isInBoard(int[] pos) {
+  public boolean isInBoard(int[] pos) {
     int x = pos[0];
     int y = pos[1];
 
@@ -248,7 +261,7 @@ public class Othello {
    * @param attacker the attacker
    * @return whether or not a move is valid
    */
-  private boolean isValidMove(int[] pos, int attacker) {
+  public boolean isValidMove(int[] pos, int attacker) {
     // Technically, this may be optimized since getCaptures
     // doesn't stop as soon as it finds a valid move
     return (getBoardValue(pos) == 0) && (getCaptures(pos, attacker).size() > 0);
@@ -265,7 +278,7 @@ public class Othello {
    *
    * @return whether or not there is valid move for the current player
    */
-  private boolean hasValidMoves(int attacker) {
+  public boolean hasValidMoves(int attacker) {
     for (int x = 0; x < board.length; x++) {
       for (int y = 0; y < board[x].length; y++) {
         int[] pos = {x, y};
