@@ -34,61 +34,6 @@ public class Othello {
    */
   private int[][] board;
 
-  /*
-  public String boardToString() {
-    String string = "";
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        string += board[x][y];
-      }
-
-      string += '\n';
-    }
-
-    return string;
-  }
-
-  public static String format(int[] pos) {
-    return "(" + pos[0] + ", " + pos[1] + ")";
-  }
-
-  public void move(int x, int y) {
-    State state = makeMove(new int[] {x, y});
-    System.out.println(state.toString());
-    System.out.println(boardToString());
-  }
-
-  public static void main(String[] args) {
-    Othello othello = new Othello(8, 8, 3);
-    /*
-    State state = othello.makeMove(new int[] {4, 2});
-    ArrayList<int[]> updates = state.updates;
-
-    for (int i = 0; i < updates.size(); i++) {
-      int[] update = updates.get(i);
-      System.out.println(format(update));
-    }
-    *//*
-    while (true) {
-      System.out.println("---");
-      int[] counts = othello.getCounts();
-      System.out.println("0: " + counts[0]);
-      System.out.println("1: " + counts[1]);
-      System.out.println("2: " + counts[2]);
-      System.out.println(othello.boardToString());
-      System.out.println("# Player " + othello.getTurn());
-      int x = IBIO.inputInt("x: ");
-      int y = IBIO.inputInt("y: ");
-      othello.makeMove(new int[] {x, y});
-    }
-  }
-
-  public int getTurn() {
-    return turn;
-  }
-  */
-
   public Othello(int width, int height) {
     this.width = width;
     this.height = height;
