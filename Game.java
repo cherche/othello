@@ -13,7 +13,7 @@ public class Game extends JPanel implements ActionListener {
   private static int width = 8;
   private static int height = 8;
   private static int playerCount = 2;
-  private static Color SIDEBAR_BACK = new Color(18, 18, 18);
+  private static Color SIDEBAR_BACK = new Color(40, 44, 53);
 
   public static void main(String[] args) {
     JPanel content = new Game();
@@ -43,25 +43,35 @@ public class Game extends JPanel implements ActionListener {
     this.add(main, BorderLayout.CENTER);
   }
 
-  private static JPanel initSidebar() {
+  private static JButton createSidebarButton(String iconURL, String actionCommand, ActionListener actionListener) {
+    JButton button = new JButton();
+    button.setOpaque(false);
+    // One may hide buttons without screwing up the layout using the following:
+    // button.setVisible(false);
+    button.setBorderPainted(false);
+    button.setIcon(createImageIcon(iconURL));
+    button.setActionCommand(actionCommand);
+    button.addActionListener(actionListener);
+    return button;
+  }
+
+  private JPanel initSidebar() {
     JPanel sidebar = new JPanel(new GridLayout(5, 0));
     sidebar.setBackground(SIDEBAR_BACK);
     sidebar.setPreferredSize(new Dimension(100, 500));
-    sidebar.add(new JButton("home"));
-    // This is the code necessary to make a JButton transparent
-    /*
-    JButton undo = new JButton("undo");
-    undo.setOpaque(false);
-    undo.setBorderPainted(false);
-    */
-    sidebar.add(new JButton("undo"));
-    sidebar.add(new JPanel());
-    sidebar.add(new JButton("instructions"));
-    sidebar.add(new JButton("settings"));
+    sidebar.add(createSidebarButton("icons/home.png", "home", this));
+    sidebar.add(createSidebarButton("icons/undo.png", "undo", this));
+    JLabel turn = new JLabel();
+    turn.setHorizontalAlignment(JLabel.CENTER);
+    turn.setIcon(createImageIcon("icons/0.png"));
+    turn.setOpaque(false);
+    sidebar.add(turn);
+    sidebar.add(createSidebarButton("icons/instructions.png", "instructions", this));
+    sidebar.add(createSidebarButton("icons/settings.png", "settings", this));
     return sidebar;
   }
 
-  private static JPanel initMenu() {
+  private JPanel initMenu() {
     JPanel menu = new JPanel();
     menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
     JLabel title = new JLabel("Configuration");
@@ -103,6 +113,7 @@ public class Game extends JPanel implements ActionListener {
   }
 
   private static JPanel initBoard() {
+    // We may later use removeAll() if the user changes the configuration
     JPanel board = new JPanel(new GridLayout(height, width));
     board.setBackground(Color.GREEN);
     return board;
@@ -110,5 +121,16 @@ public class Game extends JPanel implements ActionListener {
 
   public void actionPerformed(ActionEvent e) {
 
+  }
+
+  private static ImageIcon createImageIcon(String path) {
+    java.net.URL url = Game.class.getResource(path);
+
+    if (url != null) {
+      return new ImageIcon(url);
+    } else {
+      System.out.println("Cannot locate resource at \"" + path + "\".");
+      return null;
+    }
   }
 }
