@@ -29,6 +29,21 @@ public class Game extends JPanel implements ActionListener {
 
   public Game() {
     this.setLayout(new BorderLayout());
+    JPanel sidebar = initSidebar();
+    this.add(sidebar, BorderLayout.WEST);
+    JPanel main = new JPanel(new CardLayout());
+    main.setPreferredSize(new Dimension(500, 500));
+    JPanel menu = initMenu();
+    main.add(menu, "menu");
+    // GridLayout() takes row count then column count
+    // That results in this weird ordering of (height, width),
+    // but it's totally right - just a bit weird
+    JPanel board = initBoard();
+    main.add(board, "board");
+    this.add(main, BorderLayout.CENTER);
+  }
+
+  private static JPanel initSidebar() {
     JPanel sidebar = new JPanel(new GridLayout(5, 0));
     sidebar.setBackground(SIDEBAR_BACK);
     sidebar.setPreferredSize(new Dimension(100, 500));
@@ -43,15 +58,18 @@ public class Game extends JPanel implements ActionListener {
     sidebar.add(new JPanel());
     sidebar.add(new JButton("instructions"));
     sidebar.add(new JButton("settings"));
-    this.add(sidebar, BorderLayout.WEST);
-    JPanel container = new JPanel(new CardLayout());
-    container.setPreferredSize(new Dimension(500, 500));
+    return sidebar;
+  }
+
+  private static JPanel initMenu() {
     JPanel menu = new JPanel();
     menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
     JLabel title = new JLabel("Configuration");
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
     title.setFont(new Font("Raleway", Font.PLAIN, 45));
     menu.add(title);
+    // In fact, we could probably generalize these radio buttons
+    // with a fancy class or something like that
     {
     JPanel colours = new JPanel();
     ButtonGroup coloursGroup = new ButtonGroup();
@@ -81,14 +99,13 @@ public class Game extends JPanel implements ActionListener {
     JButton play = new JButton("Play");
     play.setAlignmentX(Component.CENTER_ALIGNMENT);
     menu.add(play);
-    container.add(menu, "menu");
-    // GridLayout() takes row count then column count
-    // That results in this weird ordering of (height, width),
-    // but it's totally right - just a bit weird
+    return menu;
+  }
+
+  private static JPanel initBoard() {
     JPanel board = new JPanel(new GridLayout(height, width));
     board.setBackground(Color.GREEN);
-    container.add(board, "board");
-    this.add(container, BorderLayout.CENTER);
+    return board;
   }
 
   public void actionPerformed(ActionEvent e) {
