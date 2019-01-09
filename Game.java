@@ -43,7 +43,7 @@ public class Game extends JPanel implements ActionListener {
     this.add(main, BorderLayout.CENTER);
   }
 
-  private static JButton createSidebarButton(String iconURL, String actionCommand, ActionListener actionListener) {
+  private static JButton createIconButton(String iconURL, String actionCommand, ActionListener actionListener) {
     JButton button = new JButton();
     button.setOpaque(false);
     // One may hide buttons without screwing up the layout using the following:
@@ -59,15 +59,15 @@ public class Game extends JPanel implements ActionListener {
     JPanel sidebar = new JPanel(new GridLayout(5, 0));
     sidebar.setBackground(SIDEBAR_BACK);
     sidebar.setPreferredSize(new Dimension(100, 500));
-    sidebar.add(createSidebarButton("icons/home.png", "home", this));
-    sidebar.add(createSidebarButton("icons/undo.png", "undo", this));
+    sidebar.add(createIconButton("icons/sidebar/home.png", "home", this));
+    sidebar.add(createIconButton("icons/sidebar/undo.png", "undo", this));
     JLabel turn = new JLabel();
     turn.setHorizontalAlignment(JLabel.CENTER);
-    turn.setIcon(createImageIcon("icons/0.png"));
+    turn.setIcon(createImageIcon("icons/turns/0.png"));
     turn.setOpaque(false);
     sidebar.add(turn);
-    sidebar.add(createSidebarButton("icons/instructions.png", "instructions", this));
-    sidebar.add(createSidebarButton("icons/settings.png", "settings", this));
+    sidebar.add(createIconButton("icons/sidebar/instructions.png", "instructions", this));
+    sidebar.add(createIconButton("icons/sidebar/settings.png", "settings", this));
     return sidebar;
   }
 
