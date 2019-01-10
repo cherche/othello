@@ -14,6 +14,9 @@ public class Game extends JPanel implements ActionListener {
   private static int height = 8;
   private static int playerCount = 2;
   private static Color SIDEBAR_BACK = new Color(40, 44, 53);
+  private static JPanel main;
+  private static CardLayout mainLayout;
+  private static JComponent[] boardSidebarComponents;
 
   public static void main(String[] args) {
     JPanel content = new Game();
@@ -31,7 +34,8 @@ public class Game extends JPanel implements ActionListener {
     this.setLayout(new BorderLayout());
     JPanel sidebar = initSidebar();
     this.add(sidebar, BorderLayout.WEST);
-    JPanel main = new JPanel(new CardLayout());
+    mainLayout = new CardLayout();
+    main = new JPanel(mainLayout);
     main.setPreferredSize(new Dimension(500, 500));
     JPanel menu = initMenu();
     main.add(menu, "menu");
@@ -43,32 +47,50 @@ public class Game extends JPanel implements ActionListener {
     this.add(main, BorderLayout.CENTER);
   }
 
-  private static JButton createIconButton(String iconURL, String actionCommand, ActionListener actionListener) {
+  private static JButton createSidebarButton(String name, ActionListener actionListener) {
     JButton button = new JButton();
     // One may hide buttons without screwing up the layout using the following:
     // button.setVisible(false);
     button.setOpaque(false);
     button.setBorderPainted(false);
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    String iconURL = "icons/sidebar/" + name + ".png";
     button.setIcon(createImageIcon(iconURL));
+    String actionCommand = name;
     button.setActionCommand(actionCommand);
     button.addActionListener(actionListener);
     return button;
+  }
+
+  private static void setSidebarMode(boolean isVisible) {
+    for (int i = 0; i < boardSidebarComponents.length; i++) {
+      boardSidebarComponents[i].setVisible(isVisible);
+    }
   }
 
   private JPanel initSidebar() {
     JPanel sidebar = new JPanel(new GridLayout(5, 0));
     sidebar.setBackground(SIDEBAR_BACK);
     sidebar.setPreferredSize(new Dimension(100, 500));
-    sidebar.add(createIconButton("icons/sidebar/home.png", "home", this));
-    sidebar.add(createIconButton("icons/sidebar/undo.png", "undo", this));
+    JButton home = createSidebarButton("home", this);
+    sidebar.add(home);
+    JButton undo = createSidebarButton("undo", this);
+    sidebar.add(undo);
     JLabel turn = new JLabel();
     turn.setHorizontalAlignment(JLabel.CENTER);
     turn.setIcon(createImageIcon("icons/turns/0.png"));
     turn.setOpaque(false);
+    // Basically, these are the ones that should only be visible
+    // when the board is visible
+    boardSidebarComponents = new JComponent[] {
+      home,
+      undo,
+      turn
+    };
+    setSidebarMode(false);
     sidebar.add(turn);
-    sidebar.add(createIconButton("icons/sidebar/instructions.png", "instructions", this));
-    sidebar.add(createIconButton("icons/sidebar/settings.png", "settings", this));
+    sidebar.add(createSidebarButton("instructions", this));
+    sidebar.add(createSidebarButton("settings", this));
     return sidebar;
   }
 
@@ -108,6 +130,8 @@ public class Game extends JPanel implements ActionListener {
     menu.add(order);
     }
     JButton play = new JButton("Play");
+    play.setActionCommand("board");
+    play.addActionListener(this);
     play.setAlignmentX(Component.CENTER_ALIGNMENT);
     menu.add(play);
     return menu;
@@ -121,7 +145,15 @@ public class Game extends JPanel implements ActionListener {
   }
 
   public void actionPerformed(ActionEvent e) {
+    String actionCommand = e.getActionCommand();
 
+    if ("board".equals(actionCommand)) {
+      setSidebarMode(true);
+      mainLayout.show(main, "board");
+    } else if ("home".equals(actionCommand)) {
+      setSidebarMode(false);
+      mainLayout.show(main, "menu");
+    }
   }
 
   private static ImageIcon createImageIcon(String path) {
