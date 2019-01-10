@@ -45,10 +45,11 @@ public class Game extends JPanel implements ActionListener {
 
   private static JButton createIconButton(String iconURL, String actionCommand, ActionListener actionListener) {
     JButton button = new JButton();
-    button.setOpaque(false);
     // One may hide buttons without screwing up the layout using the following:
     // button.setVisible(false);
+    button.setOpaque(false);
     button.setBorderPainted(false);
+    button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     button.setIcon(createImageIcon(iconURL));
     button.setActionCommand(actionCommand);
     button.addActionListener(actionListener);
