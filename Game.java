@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.*;
 import java.awt.event.*;
 import java.util.*;
 
@@ -14,20 +15,24 @@ public class Game extends JPanel implements ActionListener {
   private static int height = 8;
   private static int playerCount = 2;
   private static Color FORE = new Color(125, 130, 142);
-  private static Color BACK = new Color(40, 44, 53);
+  private static Color BACK = new Color(50, 54, 62);
   private static Color SIDEBAR_BACK = new Color(40, 44, 53);
-  private static Color BOARD_BACK = new Color(117, 204, 71);
-  private static Color BOARD_OUTLINE = Color.BLACK;
+  private static Color BOARD_BACK = new Color(0, 187, 84);
+  private static Color BOARD_OUTLINE = BACK;
   private static JPanel main;
   private static CardLayout mainLayout;
   private static JComponent[] boardSidebarComponents;
 
   public static void main(String[] args) {
     JPanel content = new Game();
+    // We want to design around a 6:5 viewport
+    content.setPreferredSize(new Dimension(600, 500));
     JFrame window = new JFrame("Othello");
     window.setContentPane(content);
-    // We want to design around a 6:5 viewport
-    window.setSize(600, 500);
+    // Setting the window size directly actually includes the title bar
+    // in the height, which means that a window size of (600, 500)
+    // would leave maybe (600, 480) for our actual content
+    window.pack();
     window.setResizable(false);
     // Centres the window on the screen
     window.setLocationRelativeTo(null);
@@ -40,29 +45,32 @@ public class Game extends JPanel implements ActionListener {
     this.add(sidebar, BorderLayout.WEST);
     mainLayout = new CardLayout();
     main = new JPanel(mainLayout);
+    main.setBackground(BACK);
     main.setPreferredSize(new Dimension(500, 500));
     JPanel menu = initMenu();
     main.add(menu, "menu");
     // GridLayout() takes row count then column count
     // That results in this weird ordering of (height, width),
     // but it's totally right - just a bit weird
-    JPanel board = initBoard();
-    main.add(board, "board");
+    JPanel boardContainer = initBoardContainer();
+    main.add(boardContainer, "boardContainer");
     this.add(main, BorderLayout.CENTER);
   }
 
-  private static JButton createSidebarButton(String name, ActionListener actionListener) {
+  private static JButton createIconButton(String iconURL, String actionCommand, ActionListener actionListener) {
     JButton button = new JButton();
-    // One may hide buttons without screwing up the layout using the following:
-    // button.setVisible(false);
-    button.setOpaque(false);
-    button.setBorderPainted(false);
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    String iconURL = "icons/sidebar/" + name + ".png";
     button.setIcon(createImageIcon(iconURL));
-    String actionCommand = name;
     button.setActionCommand(actionCommand);
     button.addActionListener(actionListener);
+    return button;
+  }
+
+  private static JButton createSidebarButton(String name, String actionCommand, ActionListener actionListener) {
+    String iconURL = "icons/sidebar/" + name + ".png";
+    JButton button = createIconButton(iconURL, actionCommand, actionListener);
+    button.setOpaque(false);
+    button.setBorderPainted(false);
     return button;
   }
 
@@ -76,9 +84,9 @@ public class Game extends JPanel implements ActionListener {
     JPanel sidebar = new JPanel(new GridLayout(5, 0));
     sidebar.setBackground(SIDEBAR_BACK);
     sidebar.setPreferredSize(new Dimension(100, 500));
-    JButton home = createSidebarButton("home", this);
+    JButton home = createSidebarButton("home", "home", this);
     sidebar.add(home);
-    JButton undo = createSidebarButton("undo", this);
+    JButton undo = createSidebarButton("undo", "undo", this);
     sidebar.add(undo);
     JLabel turn = new JLabel();
     turn.setHorizontalAlignment(JLabel.CENTER);
@@ -93,8 +101,8 @@ public class Game extends JPanel implements ActionListener {
     };
     setSidebarMode(false);
     sidebar.add(turn);
-    sidebar.add(createSidebarButton("instructions", this));
-    sidebar.add(createSidebarButton("settings", this));
+    sidebar.add(createSidebarButton("instructions", "instructions", this));
+    sidebar.add(createSidebarButton("settings", "settings", this));
     return sidebar;
   }
 
@@ -103,11 +111,12 @@ public class Game extends JPanel implements ActionListener {
     menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
     JLabel title = new JLabel("Othello");
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
-    title.setFont(new Font("Raleway", Font.PLAIN, 45));
+    title.setFont(new Font("Nunito", Font.PLAIN, 45));
+    title.setForeground(FORE);
     menu.add(title);
+    /*
     // In fact, we could probably generalize these radio buttons
     // with a fancy class or something like that
-    {
     JPanel colours = new JPanel();
     ButtonGroup coloursGroup = new ButtonGroup();
     colours.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -119,42 +128,46 @@ public class Game extends JPanel implements ActionListener {
     coloursGroup.add(white);
     colours.add(white);
     menu.add(colours);
-    }
-    {
-    JPanel order = new JPanel();
-    ButtonGroup orderGroup = new ButtonGroup();
-    order.setAlignmentX(Component.CENTER_ALIGNMENT);
-    JRadioButton first = new JRadioButton("first");
-    first.setSelected(true);
-    orderGroup.add(first);
-    order.add(first);
-    JRadioButton second = new JRadioButton("second");
-    orderGroup.add(second);
-    order.add(second);
-    menu.add(order);
-    }
+    */
     JButton play = new JButton("Play");
     play.setActionCommand("board");
     play.addActionListener(this);
     play.setAlignmentX(Component.CENTER_ALIGNMENT);
     menu.add(play);
+    menu.setOpaque(false);
     return menu;
+  }
+
+  private static JPanel initBoardContainer() {
+    // GridBagLayout vertically and horizontally centres its children by default
+    JPanel boardContainer = new JPanel(new GridBagLayout());
+    JPanel board = initBoard();
+    // Here, we'll do some calculations to figure out
+    // how big to make the board
+    board.setPreferredSize(new Dimension(480, 480));
+    // This will do for now
+    boardContainer.add(board);
+    boardContainer.setOpaque(false);
+    return boardContainer;
   }
 
   private static JPanel initBoard() {
     // We may later use removeAll() if the user changes the configuration
     JPanel board = new JPanel(new GridLayout(height, width));
 
+    // We must iterate in this order because visually,
+    // the components are added to a GridLayout left-to-right, top-to-bottom
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         JPanel tile = new JPanel();
-        tile.setOpaque(false);
+        tile.setOpaque(true);
         tile.setBorder(BorderFactory.createLineBorder(BOARD_OUTLINE));
+        tile.setBackground(BOARD_BACK);
         board.add(tile);
       }
     }
 
-    board.setBackground(BOARD_BACK);
+    board.setBackground(BACK);
     return board;
   }
 
@@ -163,7 +176,7 @@ public class Game extends JPanel implements ActionListener {
 
     if ("board".equals(actionCommand)) {
       setSidebarMode(true);
-      mainLayout.show(main, "board");
+      mainLayout.show(main, "boardContainer");
     } else if ("home".equals(actionCommand)) {
       /* Something like this to make sure they don't lose everything
       Object[] options = { "Continue", "Cancel" };
