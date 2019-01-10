@@ -13,14 +13,18 @@ public class Game extends JPanel implements ActionListener {
   private static int width = 8;
   private static int height = 8;
   private static int playerCount = 2;
+  private static Color FORE = new Color(125, 130, 142);
+  private static Color BACK = new Color(40, 44, 53);
   private static Color SIDEBAR_BACK = new Color(40, 44, 53);
+  private static Color BOARD_BACK = new Color(117, 204, 71);
+  private static Color BOARD_OUTLINE = Color.BLACK;
   private static JPanel main;
   private static CardLayout mainLayout;
   private static JComponent[] boardSidebarComponents;
 
   public static void main(String[] args) {
     JPanel content = new Game();
-    JFrame window = new JFrame();
+    JFrame window = new JFrame("Othello");
     window.setContentPane(content);
     // We want to design around a 6:5 viewport
     window.setSize(600, 500);
@@ -97,7 +101,7 @@ public class Game extends JPanel implements ActionListener {
   private JPanel initMenu() {
     JPanel menu = new JPanel();
     menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
-    JLabel title = new JLabel("Configuration");
+    JLabel title = new JLabel("Othello");
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
     title.setFont(new Font("Raleway", Font.PLAIN, 45));
     menu.add(title);
@@ -140,7 +144,17 @@ public class Game extends JPanel implements ActionListener {
   private static JPanel initBoard() {
     // We may later use removeAll() if the user changes the configuration
     JPanel board = new JPanel(new GridLayout(height, width));
-    board.setBackground(Color.GREEN);
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        JPanel tile = new JPanel();
+        tile.setOpaque(false);
+        tile.setBorder(BorderFactory.createLineBorder(BOARD_OUTLINE));
+        board.add(tile);
+      }
+    }
+
+    board.setBackground(BOARD_BACK);
     return board;
   }
 
@@ -151,6 +165,10 @@ public class Game extends JPanel implements ActionListener {
       setSidebarMode(true);
       mainLayout.show(main, "board");
     } else if ("home".equals(actionCommand)) {
+      /* Something like this to make sure they don't lose everything
+      Object[] options = { "Continue", "Cancel" };
+      JOptionPane.showOptionDialog(null, "Your progress will not be saved.", "Warning", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+      */
       setSidebarMode(false);
       mainLayout.show(main, "menu");
     }
