@@ -60,17 +60,18 @@ public class Game extends JPanel implements ActionListener {
       if (othello.isValidMove(pos, othello.getTurn() + 1)) {
         State state = othello.makeMove(pos);
 
-        if (state.isDone) {
-          frame.setTitle("Othello: It's all over");
-          return;
-        }
-
         ArrayList<int[]> updates = state.updates;
         frame.setTitle("Othello");
 
         for (int i = 0; i < updates.size(); i++) {
           int[] update = updates.get(i);
           setTile(update, state.currentTurn);
+        }
+
+        if (state.isDone) {
+          frame.setTitle("Othello: It's all over");
+          // We don't want to update the turn indicator if the game is over
+          return;
         }
 
         turn.setIcon(createImageIcon("icons/turns/indicators/" + state.nextTurn + ".png"));
@@ -306,6 +307,7 @@ public class Game extends JPanel implements ActionListener {
         return;
       }
 
+      playerCount = value;
       setSidebarMode(true);
       mainLayout.show(main, "boardContainer");
       // Technically speaking, it's pretty inefficient to rebuild the board
@@ -318,12 +320,29 @@ public class Game extends JPanel implements ActionListener {
       // positions for all possible board sizes and player counts
       int[][] initialBoard;
 
-      initialBoard = new int[][] {
-        {3, 3, 1},
-        {4, 4, 1},
-        {3, 4, 0},
-        {4, 3, 0}
-      };;
+      // We should have different initial boards for each playerCount
+      if (playerCount == 2) {
+        initialBoard = new int[][] {
+          {3, 3, 1},
+          {4, 4, 1},
+          {3, 4, 0},
+          {4, 3, 0}
+        };
+      } else if (playerCount == 3) {
+        initialBoard = new int[][] {
+          {3, 3, 1},
+          {4, 4, 1},
+          {3, 4, 2},
+          {4, 3, 0}
+        };
+      } else {
+        initialBoard = new int[][] {
+          {3, 3, 1},
+          {4, 4, 1},
+          {3, 4, 0},
+          {4, 3, 0}
+        };
+      }
 
       for (int i = 0; i < initialBoard.length; i++) {
         int[] triplet = initialBoard[i];
@@ -335,6 +354,7 @@ public class Game extends JPanel implements ActionListener {
         setTile(new int[] {x, y}, val);
       }
 
+      // Reset turn indicator
       turn.setIcon(createImageIcon("icons/turns/indicators/0.png"));
     }
   }
