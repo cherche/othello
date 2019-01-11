@@ -44,25 +44,60 @@
      inkscape:window-height="774"
      id="namedview6"
      showgrid="false"
-     inkscape:zoom="1.84375"
-     inkscape:cx="0.13701525"
+     inkscape:zoom="0.921875"
+     inkscape:cx="-61.693493"
      inkscape:cy="6.0569055"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="svg2"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0" />
   <g
      inkscape:groupmode="layer"
-     id="layer1"
-     inkscape:label="Layer 1"
+     id="layer4"
+     inkscape:label="Reg"
      style="display:inline"
      sodipodi:insensitive="true">
     <g
-       id="g4311">
+       inkscape:groupmode="layer"
+       id="layer1"
+       inkscape:label="Button"
+       style="display:inline">
+      <rect
+         style="opacity:1;fill:#009c8a;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect4309"
+         width="128"
+         height="64"
+         x="0"
+         y="0"
+         rx="36"
+         ry="32" />
+    </g>
+    <g
+       inkscape:groupmode="layer"
+       id="layer3"
+       inkscape:label="Play">
+      <path
+         d="M 80.315131,29.04689 55.171571,14.182184 c -2.04292,-1.207176 -5.17157,-0.03571 -5.17157,2.950084 l 0,29.722257 c 0,2.678643 2.90722,4.292979 5.17157,2.950083 l 25.14356,-14.857557 c 2.24292,-1.321462 2.25006,-4.578698 0,-5.900161 z"
+         id="path4"
+         style="display:inline;fill:#ffffff"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="Disabled"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <g
+       inkscape:groupmode="layer"
+       id="layer2"
+       inkscape:label="Button"
+       style="display:inline">
       <rect
          ry="32"
          rx="36"
@@ -70,29 +105,19 @@
          x="0"
          height="64"
          width="128"
-         id="rect4309"
-         style="opacity:1;fill:#009c8a;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         style="fill:#ffffff"
-         id="path4"
-         d="M 80.315131,29.04689 55.171572,14.182184 C 53.128658,12.975008 50,14.146474 50,17.132268 l 0,29.722256 c 0,2.678644 2.907224,4.29298 5.171572,2.950084 L 80.315131,34.94705 c 2.242919,-1.321462 2.250062,-4.578698 0,-5.90016 z" />
+         id="rect4309-6"
+         style="opacity:1;fill:#7d828e;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="Layer 2"
-     style="display:none"
-     sodipodi:insensitive="true">
-    <rect
-       ry="32"
-       rx="36"
-       y="0"
-       x="0"
-       height="64"
-       width="128"
-       id="rect4309-6"
-       style="opacity:1;fill:#7d828e;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <g
+       inkscape:groupmode="layer"
+       id="layer5"
+       inkscape:label="Play 1"
+       style="display:inline">
+      <path
+         d="M 80.315131,29.04689 55.171571,14.182184 c -2.04292,-1.207176 -5.17157,-0.03571 -5.17157,2.950084 l 0,29.722257 c 0,2.678643 2.90722,4.292979 5.17157,2.950083 l 25.14356,-14.857557 c 2.24292,-1.321462 2.25006,-4.578698 0,-5.900161 z"
+         id="path4-9"
+         style="display:inline;fill:#32363e;fill-opacity:1"
+         inkscape:connector-curvature="0" />
+    </g>
   </g>
 </svg>

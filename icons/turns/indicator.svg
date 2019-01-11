@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="turn.svg"
-   inkscape:export-filename="/Users/Ryan/github/othello/icons/turns/1.png"
+   inkscape:export-filename="/Users/Ryan/github/othello/icons/turns/2.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -28,11 +28,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="33.674419"
-     inkscape:cy="32.987822"
+     inkscape:zoom="1.979899"
+     inkscape:cx="29.255002"
+     inkscape:cy="43.089347"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer4"
      showgrid="false"
      inkscape:window-width="768"
      inkscape:window-height="557"
@@ -52,7 +52,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -60,19 +60,57 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-336.04724,-490.18109)">
+     transform="translate(-336.04724,-490.18109)"
+     sodipodi:insensitive="true">
     <circle
        style="opacity:1;fill:#009c8a;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path6139"
        cx="372.04724"
        cy="526.18109"
        r="36" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="0"
+     sodipodi:insensitive="true"
+     style="display:none">
     <circle
        r="32"
-       cy="526.18109"
-       cx="372.04724"
+       cy="36"
+       cx="36"
        id="circle6141"
        style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       inkscape:export-filename="/Users/Ryan/github/othello/icons/1.png" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="1"
+     sodipodi:insensitive="true"
+     style="display:none">
+    <circle
+       r="32"
+       cy="36"
+       cx="36"
+       id="circle6141-1"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       inkscape:export-filename="/Users/Ryan/github/othello/icons/1.png" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="2">
+    <circle
+       r="32"
+       cy="36"
+       cx="36"
+       id="circle6141-11"
+       style="opacity:1;fill:#777777;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        inkscape:export-filename="/Users/Ryan/github/othello/icons/1.png" />
