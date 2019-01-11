@@ -21,12 +21,19 @@ public class Game extends JPanel implements ActionListener {
   private static Color FORWARD_BACK = new Color(40, 44, 53);
   private static Color BOARD_BACK = new Color(0, 187, 84);
   private static Color BOARD_OUTLINE = BOARD_BACK.darker();
+  private static boolean isDone = false;
   private static JFrame frame;
   private static JPanel main;
   private static JLabel turn;
   private static CardLayout mainLayout;
   private static JTextField playerCountField;
   private static JButton play;
+  private static ImageIcon[] playIcons = {
+    createImageIcon("icons/menu/play.png"),
+    createImageIcon("icons/menu/play-disabled.png")
+  };
+  private static ImageIcon[] indicatorIcons;
+  private static ImageIcon[] tileIcons;
   private static JPanel board = new JPanel();
   // Okay, to be honest, this array makes it really hard to change
   // the height and width later. Oh well. Goodbye options.
@@ -41,6 +48,11 @@ public class Game extends JPanel implements ActionListener {
   // since the game tiles arne't buttons in the traditional sense
   public static MouseListener mouseListener = new MouseListener() {
     public void mousePressed(MouseEvent e) {
+      // If the game is over, nothing should happen when you click
+      if (isDone) {
+        return;
+      }
+
       // This is actually a bit like event delegation in JavaScript
       // In this case, we actually still need to assign a listener
       // to every element, but it's similar since we msut identify
@@ -59,6 +71,7 @@ public class Game extends JPanel implements ActionListener {
 
       if (othello.isValidMove(pos, othello.getTurn() + 1)) {
         State state = othello.makeMove(pos);
+        isDone = state.isDone;
 
         ArrayList<int[]> updates = state.updates;
         frame.setTitle("Othello");
@@ -68,13 +81,13 @@ public class Game extends JPanel implements ActionListener {
           setTile(update, state.currentTurn);
         }
 
-        if (state.isDone) {
+        if (isDone) {
           frame.setTitle("Othello: It's all over");
           // We don't want to update the turn indicator if the game is over
           return;
         }
 
-        turn.setIcon(createImageIcon("icons/turns/indicators/" + state.nextTurn + ".png"));
+        turn.setIcon(indicatorIcons[state.nextTurn]);
       } else {
         frame.setTitle("Othello: That is not a valid move!");
       }
@@ -120,6 +133,8 @@ public class Game extends JPanel implements ActionListener {
   };
 
   public static void main(String[] args) {
+    initIndicatorIcons();
+    initTileIcons();
     JPanel content = new Game();
     // We want to design around a 6:5 viewport
     content.setPreferredSize(new Dimension(600, 500));
@@ -231,6 +246,24 @@ public class Game extends JPanel implements ActionListener {
     return menu;
   }
 
+  private static void initIndicatorIcons() {
+    int MAX_PLAYER_COUNT = 3;
+    indicatorIcons = new ImageIcon[MAX_PLAYER_COUNT];
+
+    for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
+      indicatorIcons[i] = createImageIcon("icons/turns/indicators/" + i + ".png");
+    }
+  }
+
+  private static void initTileIcons() {
+    int MAX_PLAYER_COUNT = 3;
+    tileIcons = new ImageIcon[MAX_PLAYER_COUNT];
+
+    for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
+      tileIcons[i] = createImageIcon("icons/turns/tiles/" + i + ".png");
+    }
+  }
+
   private JPanel initPlayerCountField() {
     JPanel pair = new JPanel();
     JLabel label = new JLabel(createImageIcon("icons/menu/player-count.png"));
@@ -256,10 +289,10 @@ public class Game extends JPanel implements ActionListener {
 
         if (value == -1) {
           play.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-          play.setIcon(createImageIcon("icons/menu/play-disabled.png"));
+          play.setIcon(playIcons[1]);
         } else {
           play.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-          play.setIcon(createImageIcon("icons/menu/play.png"));
+          play.setIcon(playIcons[0]);
         }
       }
     });
@@ -269,6 +302,7 @@ public class Game extends JPanel implements ActionListener {
     pair.setAlignmentX(Component.CENTER_ALIGNMENT);
     return pair;
   }
+
   private static JPanel initBoardContainer() {
     // GridBagLayout vertically and horizontally centres its children by default
     JPanel boardContainer = new JPanel(new GridBagLayout());
@@ -293,7 +327,6 @@ public class Game extends JPanel implements ActionListener {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         JLabel tile = new JLabel();
-        //tile.setIcon(createImageIcon("icons/turns/tiles/0.png"));
         tile.setOpaque(true);
         tile.setBorder(BorderFactory.createLineBorder(BOARD_OUTLINE));
         tile.setBackground(BOARD_BACK);
@@ -329,6 +362,7 @@ public class Game extends JPanel implements ActionListener {
       }
 
       playerCount = value;
+      isDone = false;
       setSidebarMode(true);
       mainLayout.show(main, "boardContainer");
       // Technically speaking, it's pretty inefficient to rebuild the board
@@ -376,7 +410,7 @@ public class Game extends JPanel implements ActionListener {
       }
 
       // Reset turn indicator
-      turn.setIcon(createImageIcon("icons/turns/indicators/0.png"));
+      turn.setIcon(indicatorIcons[0]);
     }
   }
 
@@ -393,7 +427,7 @@ public class Game extends JPanel implements ActionListener {
       return;
     }
 
-    tile.setIcon(createImageIcon("icons/turns/tiles/" + id + ".png"));
+    tile.setIcon(tileIcons[id]);
   }
 
   private static int getPlayerCountFieldValue() {
