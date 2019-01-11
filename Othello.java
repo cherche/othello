@@ -47,6 +47,10 @@ public class Othello {
     this.board = new int[width][height];
   }
 
+  public int getTurn() {
+    return turn;
+  }
+
   /**
    * Places a tile on the board with a check for legality
    *

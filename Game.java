@@ -31,6 +31,47 @@ public class Game extends JPanel implements ActionListener {
   // the height and width later. Oh well. Goodbye options.
   private static JLabel[][] tiles = new JLabel[width][height];
   private static JComponent[] boardSidebarComponents;
+  // This is a lot more efficient than instantiating
+  // a new MouseListener for every single JPanel
+  // "But why didn't you just use JButtons instead"?
+  // From experience, a ton of JButtons will take quite
+  // some time to load in, so this makes loading faster
+  // Semantically speaking, it's fine not to use JButtons
+  // since the game tiles arne't buttons in the traditional sense
+  public static MouseListener mouseListener = new MouseListener() {
+    public void mousePressed(MouseEvent e) {
+      // This is actually a bit like event delegation in JavaScript
+      // In this case, we actually still need to assign a listener
+      // to every element, but it's similar since we msut identify
+      // the element that is actually triggering the listener, and
+      // there is only one listener
+      JComponent pressed = (JComponent) e.getComponent();
+      String name = pressed.getName();
+      int id = Integer.parseInt(name);
+      int x = id / height;
+      int y = id % height;
+      System.out.println("(" + x + ", " + y + ")");
+      /*
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+          System.out.print(othello.board[x][y]);
+        }
+
+        System.out.println("");
+      }
+      */
+      int[] pos = {id / height, id % height};
+      System.out.println(othello.isValidMove(pos, othello.getTurn()));
+    }
+
+    public void mouseReleased(MouseEvent e) {}
+
+    public void mouseEntered(MouseEvent e) {}
+
+    public void mouseExited(MouseEvent e) {}
+
+    public void mouseClicked(MouseEvent e) {}
+  };
 
   public static void main(String[] args) {
     JPanel content = new Game();
@@ -210,6 +251,11 @@ public class Game extends JPanel implements ActionListener {
         tile.setOpaque(true);
         tile.setBorder(BorderFactory.createLineBorder(BOARD_OUTLINE));
         tile.setBackground(BOARD_BACK);
+        // This stores the coordinates as a number in base height
+        // It's honestly a bit cheaty to use a name to store
+        // coordinates of this tile, but it's pretty efficient
+        tile.setName(String.valueOf(x * height + y));
+        tile.addMouseListener(mouseListener);
         board.add(tile);
         tiles[x][y] = tile;
       }
