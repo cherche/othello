@@ -32,7 +32,7 @@ public class Othello {
   /**
    * A 2D array of all spcaes on the board
    */
-  private int[][] board;
+  public int[][] board;
 
   public Othello(int width, int height) {
     this.width = width;
