@@ -23,6 +23,7 @@ public class Game extends JPanel implements ActionListener {
   private static Color BOARD_OUTLINE = BOARD_BACK.darker();
   private static JFrame frame;
   private static JPanel main;
+  private static JLabel turn;
   private static CardLayout mainLayout;
   private static JTextField playerCountField;
   private static JButton play;
@@ -48,9 +49,35 @@ public class Game extends JPanel implements ActionListener {
       JComponent pressed = (JComponent) e.getComponent();
       String name = pressed.getName();
       int id = Integer.parseInt(name);
+      /*
       int x = id / height;
       int y = id % height;
       System.out.println("(" + x + ", " + y + ")");
+      */
+
+      int[] pos = {id / height, id % height};
+
+      if (othello.isValidMove(pos, othello.getTurn() + 1)) {
+        State state = othello.makeMove(pos);
+
+        if (state.isDone) {
+          frame.setTitle("Othello: It's all over");
+          return;
+        }
+
+        ArrayList<int[]> updates = state.updates;
+        frame.setTitle("Othello");
+
+        for (int i = 0; i < updates.size(); i++) {
+          int[] update = updates.get(i);
+          setTile(update, state.currentTurn);
+        }
+
+        turn.setIcon(createImageIcon("icons/turns/indicators/" + state.nextTurn + ".png"));
+      } else {
+        frame.setTitle("Othello: That is not a valid move!");
+      }
+
       /*
       for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
@@ -60,8 +87,6 @@ public class Game extends JPanel implements ActionListener {
         System.out.println("");
       }
       */
-      int[] pos = {id / height, id % height};
-      System.out.println(othello.isValidMove(pos, othello.getTurn()));
     }
 
     public void mouseReleased(MouseEvent e) {}
@@ -139,9 +164,8 @@ public class Game extends JPanel implements ActionListener {
     sidebar.add(home);
     JButton undo = createSidebarButton("undo", "undo", this);
     sidebar.add(undo);
-    JLabel turn = new JLabel();
+    turn = new JLabel();
     turn.setHorizontalAlignment(JLabel.CENTER);
-    turn.setIcon(createImageIcon("icons/turns/indicators/0.png"));
     turn.setOpaque(false);
     // Basically, these are the ones that should only be visible
     // when the board is visible
@@ -292,12 +316,14 @@ public class Game extends JPanel implements ActionListener {
       // on the number of players manually
       // I don't know of a mathematical way to generate symmetrical
       // positions for all possible board sizes and player counts
-      int[][] initialBoard = {
+      int[][] initialBoard;
+
+      initialBoard = new int[][] {
         {3, 3, 1},
         {4, 4, 1},
         {3, 4, 0},
         {4, 3, 0}
-      };
+      };;
 
       for (int i = 0; i < initialBoard.length; i++) {
         int[] triplet = initialBoard[i];
@@ -308,6 +334,8 @@ public class Game extends JPanel implements ActionListener {
         othello.board[x][y] = val + 1;
         setTile(new int[] {x, y}, val);
       }
+
+      turn.setIcon(createImageIcon("icons/turns/indicators/0.png"));
     }
   }
 

@@ -207,6 +207,8 @@ public class Othello {
     return (0 <= x && x < this.width) && (0 <= y && y < this.height);
   }
 
+  // This is nice but is pretty inefficient
+  // For us, we don't care too too much about efficiency, though ...
   /**
    * Determines whether a move is valid
    *
