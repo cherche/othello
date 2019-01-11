@@ -91,16 +91,6 @@ public class Game extends JPanel implements ActionListener {
       } else {
         frame.setTitle("Othello: That is not a valid move!");
       }
-
-      /*
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          System.out.print(othello.board[x][y]);
-        }
-
-        System.out.println("");
-      }
-      */
     }
 
     public void mouseReleased(MouseEvent e) {}
@@ -300,6 +290,9 @@ public class Game extends JPanel implements ActionListener {
     pair.add(field);
     pair.setBackground(FORWARD_BACK);
     pair.setAlignmentX(Component.CENTER_ALIGNMENT);
+    pair.setToolTipText("You may have 2 to 4 players.");
+    label.setToolTipText("You may have 2 to 4 players.");
+    field.setToolTipText("You may have 2 to 4 players.");
     return pair;
   }
 
@@ -401,12 +394,11 @@ public class Game extends JPanel implements ActionListener {
 
       for (int i = 0; i < initialBoard.length; i++) {
         int[] triplet = initialBoard[i];
-        int x = triplet[0];
-        int y = triplet[1];
+        int[] pos = {triplet[0], triplet[1]};
         int val = triplet[2];
         // Since a blank space is 0 in storage (for our purposes)
-        othello.board[x][y] = val + 1;
-        setTile(new int[] {x, y}, val);
+        othello.setBoardValue(pos, val + 1);
+        setTile(pos, val);
       }
 
       // Reset turn indicator
