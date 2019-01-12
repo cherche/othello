@@ -215,8 +215,8 @@ public class Game extends JPanel implements ActionListener {
   }
 
   private JPanel initMenu() {
+    // GridBagLayout centres its children by default
     JPanel menu = new JPanel(new GridBagLayout());
-    GridBagConstraints c = new GridBagConstraints();
     JPanel container = new JPanel();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     JLabel title = new JLabel("Othello");
@@ -237,7 +237,7 @@ public class Game extends JPanel implements ActionListener {
     play.setAlignmentX(Component.CENTER_ALIGNMENT);
     container.add(play);
     container.setOpaque(false);
-    menu.add(container, c);
+    menu.add(container);
     menu.setOpaque(false);
     return menu;
   }
@@ -274,9 +274,9 @@ public class Game extends JPanel implements ActionListener {
     pair.add(field);
     pair.setBackground(FORWARD_BACK);
     pair.setAlignmentX(Component.CENTER_ALIGNMENT);
-    pair.setToolTipText("You may have 2 to 4 players.");
+    // We want the tooltip to appear right away
+    ToolTipManager.sharedInstance().setInitialDelay(0);
     label.setToolTipText("You may have 2 to 4 players.");
-    field.setToolTipText("You may have 2 to 4 players.");
     return pair;
   }
 
