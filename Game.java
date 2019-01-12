@@ -89,7 +89,7 @@ public class Game extends JPanel implements ActionListener {
         }
 
         if (isDone) {
-          status.setText("It's all over.");
+          status.setText("The game is finished.");
           // We don't want to update the turn indicator if the game is over
           return;
         }
@@ -476,11 +476,13 @@ public class Game extends JPanel implements ActionListener {
         setTile(pos, val);
       }
 
-      // Update counts
+      // Update counts (and perhaps reset)
       updateCountsContainer();
       updateCountPanels();
       // Reset turn indicator
       indicator.setIcon(indicatorIcons[0]);
+      // Reset status text
+      status.setText(" ");
     }
   }
 
