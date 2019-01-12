@@ -37,6 +37,7 @@ public class Game extends JPanel implements ActionListener {
   };
   private static JLabel[] countLabels;
   private static JPanel countsContainer;
+  private static JLabel status;
   private static ImageIcon[] indicatorIcons;
   private static ImageIcon[] tileIcons;
   private static JPanel board = new JPanel();
@@ -79,7 +80,7 @@ public class Game extends JPanel implements ActionListener {
         isDone = state.isDone;
         updateCountPanels();
         ArrayList<int[]> updates = state.updates;
-        frame.setTitle("Othello");
+        status.setText(" ");
 
         for (int i = 0; i < updates.size(); i++) {
           int[] update = updates.get(i);
@@ -87,14 +88,18 @@ public class Game extends JPanel implements ActionListener {
         }
 
         if (isDone) {
-          frame.setTitle("Othello: It's all over");
+          status.setText("It's all over.");
           // We don't want to update the turn indicator if the game is over
           return;
         }
 
+        if (state.nextTurn != (state.currentTurn + 1) % playerCount) {
+          status.setText("Turns were skipped.");
+        }
+
         indicator.setIcon(indicatorIcons[state.nextTurn]);
       } else {
-        frame.setTitle("Othello: That is not a valid move!");
+        status.setText("That is not a valid move.");
       }
     }
 
@@ -309,7 +314,7 @@ public class Game extends JPanel implements ActionListener {
     // We want to have another panel so that hiding the status
     // will not "collapse" our GridBagLayout
     JPanel bottom = new JPanel();
-    JLabel status = new JLabel(" ");
+    status = new JLabel(" ");
     status.setForeground(FORE);
     status.setFont(BODY_FONT);
     bottom.add(status);
