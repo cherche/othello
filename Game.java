@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.font.*;
 import java.awt.event.*;
 import java.util.*;
+import javax.sound.sampled.*;
 
 /**
  * A virtual Reversi, with some options
@@ -80,8 +81,10 @@ public class Game extends JPanel implements ActionListener {
         State state = othello.makeMove(pos);
         isDone = state.isDone;
         updateCountPanels();
-        ArrayList<int[]> updates = state.updates;
         status.setText(" ");
+        ArrayList<int[]> updates = state.updates;
+        int CLIP_VARIANTS = 8;
+        playClip("audio/" + ((int) (Math.random() * CLIP_VARIANTS)) + ".wav");
 
         for (int i = 0; i < updates.size(); i++) {
           int[] update = updates.get(i);
@@ -503,6 +506,22 @@ public class Game extends JPanel implements ActionListener {
     } else {
       System.out.println("Cannot locate resource at \"" + path + "\".");
       return null;
+    }
+  }
+
+  private static void playClip(String path) {
+
+    // We need the try-catch since there is some chance that the path is wrong
+    // or that the audio file isn't acceptable
+    try {
+      java.net.URL url = Game.class.getResource(path);
+      AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+      Clip clip = AudioSystem.getClip();
+      // Open and play (obviously)
+      clip.open(audioIn);
+      clip.start();
+    } catch (Exception e) {
+      System.out.println("Cannot open resource at \"" + path + "\".");
     }
   }
 }
