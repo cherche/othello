@@ -16,6 +16,9 @@ public class Game extends JPanel implements ActionListener {
   private static int height = 8;
   private static int playerCount = 2;
   private static Othello othello;
+  private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 60);
+  private static Font INFO_FONT = new Font("Open Sans", Font.PLAIN, 44);
+  private static Font BODY_FONT = new Font("Open Sans", Font.PLAIN, 24);
   private static Color FORE = new Color(125, 130, 142);
   private static Color BACK = new Color(50, 54, 62);
   private static Color FORWARD_BACK = new Color(40, 44, 53);
@@ -32,6 +35,8 @@ public class Game extends JPanel implements ActionListener {
     createImageIcon("icons/menu/play.png"),
     createImageIcon("icons/menu/play-disabled.png")
   };
+  private static JLabel[] countLabels;
+  private static JPanel countsContainer;
   private static ImageIcon[] indicatorIcons;
   private static ImageIcon[] tileIcons;
   private static JPanel board = new JPanel();
@@ -72,7 +77,7 @@ public class Game extends JPanel implements ActionListener {
       if (othello.isValidMove(pos, othello.getTurn() + 1)) {
         State state = othello.makeMove(pos);
         isDone = state.isDone;
-
+        updateCountPanels();
         ArrayList<int[]> updates = state.updates;
         frame.setTitle("Othello");
 
@@ -126,8 +131,7 @@ public class Game extends JPanel implements ActionListener {
     initIndicatorIcons();
     initTileIcons();
     JPanel content = new Game();
-    // We want to design around a 6:5 viewport
-    content.setPreferredSize(new Dimension(648, 540));
+    content.setPreferredSize(new Dimension(1024, 768));
     frame = new JFrame("Othello");
     frame.setContentPane(content);
     // Setting the window size directly actually includes the title bar
@@ -186,7 +190,7 @@ public class Game extends JPanel implements ActionListener {
   private JPanel initSidebar() {
     JPanel sidebar = new JPanel(new BorderLayout());
     sidebar.setBackground(FORWARD_BACK);
-    sidebar.setPreferredSize(new Dimension(108, 540));
+    sidebar.setPreferredSize(new Dimension(108, 768));
     JPanel top = new JPanel(new GridLayout(2, 0));
     JButton home = createSidebarButton("home", "home", this);
     top.add(home);
@@ -226,7 +230,7 @@ public class Game extends JPanel implements ActionListener {
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     JLabel title = new JLabel("Othello");
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
-    title.setFont(new Font("Gill Sans", Font.PLAIN, 60));
+    title.setFont(TITLE_FONT);
     title.setForeground(FORE);
     title.setBorder(new EmptyBorder(0, 0, 15, 0));
     container.add(title);
@@ -251,13 +255,9 @@ public class Game extends JPanel implements ActionListener {
     JPanel pair = new JPanel();
     JLabel label = new JLabel(createImageIcon("icons/menu/player-count.png"));
     label.setBorder(new EmptyBorder(0, 15, 0, 5));
-    /*
-    label.setFont(new Font("Open Sans", Font.PLAIN, 36));
-    label.setForeground(FORE);
-    */
     pair.add(label);
     JTextField field = new JTextField("2", 2);
-    field.setFont(new Font("Open Sans", Font.PLAIN, 44));
+    field.setFont(INFO_FONT);
     field.setForeground(FORE);
     field.setOpaque(false);
     field.setHorizontalAlignment(JTextField.CENTER);
@@ -290,21 +290,35 @@ public class Game extends JPanel implements ActionListener {
   }
 
   private static JPanel initBoardScreen() {
-    JPanel boardScreen = new JPanel(new BorderLayout());
-    JLabel status = new JLabel("Status");
-    boardScreen.add(status, BorderLayout.NORTH);
     // GridBagLayout vertically and horizontally centres its children by default
-    JPanel container = new JPanel(new GridBagLayout());
+    JPanel boardScreen = new JPanel(new GridBagLayout());
+    // That's why we need this additional container
+    // We want the components in this panel to stick together,
+    // but overall, everything hsould be centred
+    JPanel container = new JPanel(new BorderLayout());
     JPanel board = createBoard();
     // Here, we might do some calculations to figure out
     // how big to make the board
     // This will do for now
     board.setPreferredSize(new Dimension(512, 512));
     board.setOpaque(false);
-    container.add(board);
-    container.setOpaque(false);
-    boardScreen.add(container, BorderLayout.CENTER);
-    boardScreen.setBackground(BACK);
+    container.add(board, BorderLayout.CENTER);
+    countsContainer = new JPanel();
+    countsContainer.setOpaque(false);
+    container.add(countsContainer, BorderLayout.NORTH);
+    // We want to have another panel so that hiding the status
+    // will not "collapse" our GridBagLayout
+    JPanel bottom = new JPanel();
+    JLabel status = new JLabel(" ");
+    status.setForeground(FORE);
+    status.setFont(BODY_FONT);
+    bottom.add(status);
+    bottom.setOpaque(false);
+    container.add(bottom, BorderLayout.SOUTH);
+    container.setBorder(new EmptyBorder(0, 15, 5, 15));
+    container.setBackground(FORWARD_BACK);
+    boardScreen.add(container);
+    boardScreen.setOpaque(false);
     return boardScreen;
   }
 
@@ -326,12 +340,39 @@ public class Game extends JPanel implements ActionListener {
         // coordinates of this tile, but it's pretty efficient
         tile.setName(String.valueOf(x * height + y));
         tile.addMouseListener(mouseListener);
+        tile.setHorizontalAlignment(JLabel.CENTER);
         board.add(tile);
         tiles[x][y] = tile;
       }
     }
 
     return board;
+  }
+
+  private static void updateCountsContainer() {
+    countsContainer.removeAll();
+    countsContainer.setLayout(new GridLayout(0, playerCount));
+    countLabels = new JLabel[playerCount];
+
+    for (int i = 0; i < playerCount; i++) {
+      JPanel count = new JPanel();
+      JLabel label = new JLabel();
+      label.setIcon(tileIcons[i]);
+      label.setForeground(FORE);
+      label.setFont(INFO_FONT);
+      count.add(label);
+      count.setOpaque(false);
+      countsContainer.add(count);
+      countLabels[i] = label;
+    }
+  }
+
+  private static void updateCountPanels() {
+    int[] counts = othello.getCounts();
+
+    for (int i = 0; i < playerCount; i++) {
+      countLabels[i].setText(String.valueOf(counts[i]));
+    }
   }
 
   private static void initIndicatorIcons() {
@@ -367,6 +408,7 @@ public class Game extends JPanel implements ActionListener {
       // but I want to since it's nice (especially for debugging)
       isDone = false;
       othello.undo();
+      updateCountPanels();
       indicator.setIcon(indicatorIcons[othello.getTurn()]);
 
       for (int x = 0; x < width; x++) {
@@ -392,6 +434,8 @@ public class Game extends JPanel implements ActionListener {
       // every time, but I'll leave efficiency for a later date
       createBoard();
       othello = new Othello(width, height, playerCount);
+      updateCountsContainer();
+      updateCountPanels();
       // We should basically define an initial board depending
       // on the number of players manually
       // I don't know of a mathematical way to generate symmetrical
