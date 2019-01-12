@@ -27,6 +27,8 @@ public class Game extends JPanel implements ActionListener {
   private static Color BOARD_OUTLINE = BOARD_BACK.darker();
   private static int MAX_PLAYER_COUNT = 4;
   private static boolean isDone = false;
+  private static JFrame settings;
+  private static JFrame instructions;
   private static JFrame frame;
   private static JPanel main;
   private static JLabel indicator;
@@ -126,24 +128,40 @@ public class Game extends JPanel implements ActionListener {
     frame = new JFrame("Othello");
     frame.setContentPane(content);
     // Setting the window size directly actually includes the title bar
-    // in the height, which means that a window size of (600, 500)
-    // would leave maybe (600, 480) for our actual content
+    // in the height, which means that, for example, a window size
+    //  of (600, 500) would leave maybe (600, 480) for our actual content
     frame.pack();
     //frame.setResizable(false);
     // Centres the window on the screen
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    initSettings();
+    initInstructions();
   }
 
-  public Game() {
+  private static void initSettings() {
+    settings = new JFrame();
+    settings.setSize(300, 300);
+  }
+
+  private static void initInstructions () {
+    // The difference between the instructions window
+    // and the settings window is that the instructions
+    // window should reappear in the same spot that
+    // it last was when the user closed it
+    instructions = new JFrame();
+    instructions.setSize(300, 300);
+    instructions.setLocationRelativeTo(null);
+  }
+
+  private Game() {
     this.setLayout(new BorderLayout());
     JPanel sidebar = initSidebar();
     this.add(sidebar, BorderLayout.WEST);
     mainLayout = new CardLayout();
     main = new JPanel(mainLayout);
     main.setBackground(BACK);
-    //main.setPreferredSize(new Dimension(500, 500));
     JPanel menu = initMenu();
     main.add(menu, "menu");
     // GridLayout() takes row count then column count
@@ -245,7 +263,7 @@ public class Game extends JPanel implements ActionListener {
   private JPanel initPlayerCountField() {
     JPanel pair = new JPanel();
     JLabel label = new JLabel(createImageIcon("icons/menu/player-count.png"));
-    label.setBorder(new EmptyBorder(0, 15, 0, 5));
+    label.setBorder(new EmptyBorder(0, 5, 0, 5));
     pair.add(label);
     JTextField field = new JTextField("2", 2);
     field.setFont(INFO_FONT);
@@ -385,7 +403,12 @@ public class Game extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     String actionCommand = e.getActionCommand();
 
-    if ("home".equals(actionCommand)) {
+    if ("instructions".equals(actionCommand)) {
+      instructions.setVisible(true);
+    } else if ("settings".equals(actionCommand)) {
+      settings.setLocation(0, 0);
+      settings.setVisible(true);
+    } else if ("home".equals(actionCommand)) {
       /* Something like this to make sure they don't lose everything
       Object[] options = { "Continue", "Cancel" };
       JOptionPane.showOptionDialog(null, "Your progress will not be saved.", "Warning", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
@@ -405,7 +428,7 @@ public class Game extends JPanel implements ActionListener {
       updateCountPanels();
       indicator.setIcon(indicatorIcons[othello.getTurn()]);
       playClip("audio/undo.wav");
-      status.setText("Undid last move.");
+      status.setText("The last move was undone.");
 
       for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
