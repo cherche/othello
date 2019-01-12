@@ -64,6 +64,10 @@ public class Othello {
     revert(log.size() - 1);
   }
 
+  public int getLogSize() {
+    return log.size();
+  }
+
   public int getTurn() {
     return turn;
   }

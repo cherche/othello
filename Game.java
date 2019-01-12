@@ -17,7 +17,7 @@ public class Game extends JPanel implements ActionListener {
   private static int height = 8;
   private static int playerCount = 2;
   private static Othello othello;
-  private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 60);
+  private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 66);
   private static Font INFO_FONT = new Font("Open Sans", Font.PLAIN, 44);
   private static Font BODY_FONT = new Font("Open Sans", Font.PLAIN, 24);
   private static Color FORE = new Color(125, 130, 142);
@@ -83,8 +83,9 @@ public class Game extends JPanel implements ActionListener {
         updateCountPanels();
         status.setText(" ");
         ArrayList<int[]> updates = state.updates;
-        int CLIP_VARIANTS = 8;
-        playClip("audio/" + ((int) (Math.random() * CLIP_VARIANTS)) + ".wav");
+        int TILE_PLACED_VARIANTS = 3;
+        int clipName = ((int) (Math.random() * TILE_PLACED_VARIANTS));
+        playClip("audio/tile-placed/" + clipName + ".wav");
 
         for (int i = 0; i < updates.size(); i++) {
           int[] update = updates.get(i);
@@ -103,6 +104,7 @@ public class Game extends JPanel implements ActionListener {
 
         indicator.setIcon(indicatorIcons[state.nextTurn]);
       } else {
+        playClip("audio/invalid-move.wav");
         status.setText("That is not a valid move.");
       }
     }
@@ -391,12 +393,19 @@ public class Game extends JPanel implements ActionListener {
       setSidebarMode(false);
       mainLayout.show(main, "menu");
     } else if ("undo".equals(actionCommand)) {
+      // If there are no moves to undo ... don't do anything
+      if (othello.getLogSize() == 0) {
+        return;
+      }
+
       // Technically, we don't need to reenable the game,
       // but I want to since it's nice (especially for debugging)
       isDone = false;
       othello.undo();
       updateCountPanels();
       indicator.setIcon(indicatorIcons[othello.getTurn()]);
+      playClip("audio/undo.wav");
+      status.setText("Undid last move.");
 
       for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
@@ -464,6 +473,7 @@ public class Game extends JPanel implements ActionListener {
       updateCountPanels();
       // Reset turn indicator
       indicator.setIcon(indicatorIcons[0]);
+      playClip("audio/play.wav");
       // Reset status text
       status.setText(" ");
     }
