@@ -112,26 +112,6 @@ public class Game extends JPanel implements ActionListener {
 
     public void mouseClicked(MouseEvent e) {}
   };
-  // Closing the main window should quit the program in its entirety
-  public static WindowListener windowListener = new WindowListener() {
-    public void windowClosing(WindowEvent e) {
-      System.exit(0);
-    }
-
-    public void windowClosed(WindowEvent e) {
-      System.exit(0);
-    }
-
-    public void windowActivated(WindowEvent e) {}
-
-    public void windowDeactivated(WindowEvent e) {}
-
-    public void windowDeiconified(WindowEvent e) {}
-
-    public void windowIconified(WindowEvent e) {}
-
-    public void windowOpened(WindowEvent e) {}
-  };
 
   public static void main(String[] args) {
     initIndicatorIcons();
@@ -148,7 +128,7 @@ public class Game extends JPanel implements ActionListener {
     // Centres the window on the screen
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
-    frame.addWindowListener(windowListener);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 
   public Game() {
