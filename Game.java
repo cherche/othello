@@ -434,8 +434,6 @@ public class Game extends JPanel implements ActionListener {
       // every time, but I'll leave efficiency for a later date
       createBoard();
       othello = new Othello(width, height, playerCount);
-      updateCountsContainer();
-      updateCountPanels();
       // We should basically define an initial board depending
       // on the number of players manually
       // I don't know of a mathematical way to generate symmetrical
@@ -475,6 +473,9 @@ public class Game extends JPanel implements ActionListener {
         setTile(pos, val);
       }
 
+      // Update counts
+      updateCountsContainer();
+      updateCountPanels();
       // Reset turn indicator
       indicator.setIcon(indicatorIcons[0]);
     }
