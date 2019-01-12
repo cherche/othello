@@ -17,7 +17,7 @@ public class Game extends JPanel implements ActionListener {
   private static int height = 8;
   private static int playerCount = 2;
   private static Othello othello;
-  private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 66);
+  private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 72);
   private static Font INFO_FONT = new Font("Open Sans", Font.PLAIN, 44);
   private static Font BODY_FONT = new Font("Open Sans", Font.PLAIN, 24);
   private static Color FORE = new Color(125, 130, 142);
@@ -79,36 +79,38 @@ public class Game extends JPanel implements ActionListener {
 
       int[] pos = {id / height, id % height};
 
-      if (othello.isValidMove(pos, othello.getTurn() + 1)) {
-        State state = othello.makeMove(pos);
-        isDone = state.isDone;
-        updateCountPanels();
-        status.setText(" ");
-        ArrayList<int[]> updates = state.updates;
-        int TILE_PLACED_VARIANTS = 3;
-        int clipName = ((int) (Math.random() * TILE_PLACED_VARIANTS));
-        playClip("audio/tile-placed/" + clipName + ".wav");
-
-        for (int i = 0; i < updates.size(); i++) {
-          int[] update = updates.get(i);
-          setTile(update, state.currentTurn);
-        }
-
-        if (isDone) {
-          status.setText("The game is finished.");
-          // We don't want to update the turn indicator if the game is over
-          return;
-        }
-
-        if (state.nextTurn != (state.currentTurn + 1) % playerCount) {
-          status.setText("Turns were skipped.");
-        }
-
-        indicator.setIcon(indicatorIcons[state.nextTurn]);
-      } else {
+      if (!othello.isValidMove(pos, othello.getTurn() + 1)) {
         playClip("audio/invalid-move.wav");
         status.setText("That is not a valid move.");
+        return;
       }
+      State state = othello.makeMove(pos);
+      isDone = state.isDone;
+      updateCountPanels();
+      status.setText(" ");
+      ArrayList<int[]> updates = state.updates;
+      int TILE_PLACED_VARIANTS = 3;
+      int clipName = ((int) (Math.random() * TILE_PLACED_VARIANTS));
+
+      for (int i = 0; i < updates.size(); i++) {
+        int[] update = updates.get(i);
+        setTile(update, state.currentTurn);
+      }
+
+      if (isDone) {
+        status.setText("The game is finished.");
+        playClip("audio/game-over.wav");
+        // We don't want to update the turn indicator if the game is over
+        return;
+      } else {
+        playClip("audio/tile-placed/" + clipName + ".wav");
+      }
+
+      if (state.nextTurn != (state.currentTurn + 1) % playerCount) {
+        status.setText("Turns were skipped.");
+      }
+
+      indicator.setIcon(indicatorIcons[state.nextTurn]);
     }
 
     public void mouseReleased(MouseEvent e) {}
