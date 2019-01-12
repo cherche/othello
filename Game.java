@@ -24,7 +24,7 @@ public class Game extends JPanel implements ActionListener {
   private static boolean isDone = false;
   private static JFrame frame;
   private static JPanel main;
-  private static JLabel turn;
+  private static JLabel indicator;
   private static CardLayout mainLayout;
   private static JTextField playerCountField;
   private static JButton play;
@@ -87,7 +87,7 @@ public class Game extends JPanel implements ActionListener {
           return;
         }
 
-        turn.setIcon(indicatorIcons[state.nextTurn]);
+        indicator.setIcon(indicatorIcons[state.nextTurn]);
       } else {
         frame.setTitle("Othello: That is not a valid move!");
       }
@@ -191,18 +191,18 @@ public class Game extends JPanel implements ActionListener {
     sidebar.add(home);
     JButton undo = createSidebarButton("undo", "undo", this);
     sidebar.add(undo);
-    turn = new JLabel();
-    turn.setHorizontalAlignment(JLabel.CENTER);
-    turn.setOpaque(false);
+    indicator = new JLabel();
+    indicator.setHorizontalAlignment(JLabel.CENTER);
+    indicator.setOpaque(false);
     // Basically, these are the ones that should only be visible
     // when the board is visible
     boardSidebarComponents = new JComponent[] {
       home,
       undo,
-      turn
+      indicator
     };
     setSidebarMode(false);
-    sidebar.add(turn);
+    sidebar.add(indicator);
     sidebar.add(createSidebarButton("instructions", "instructions", this));
     sidebar.add(createSidebarButton("settings", "settings", this));
     return sidebar;
@@ -346,6 +346,17 @@ public class Game extends JPanel implements ActionListener {
       */
       setSidebarMode(false);
       mainLayout.show(main, "menu");
+    } else if ("undo".equals(actionCommand)) {
+      othello.undo();
+      indicator.setIcon(indicatorIcons[othello.getTurn()]);
+
+      for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+          int[] pos = new int[] {x, y};
+          int value = othello.getBoardValue(pos);
+          setTile(pos, value - 1);
+        }
+      }
     } else if ("play".equals(actionCommand)) {
       int value = getPlayerCountFieldValue();
 
@@ -402,7 +413,7 @@ public class Game extends JPanel implements ActionListener {
       }
 
       // Reset turn indicator
-      turn.setIcon(indicatorIcons[0]);
+      indicator.setIcon(indicatorIcons[0]);
     }
   }
 
@@ -414,8 +425,6 @@ public class Game extends JPanel implements ActionListener {
     // ID of -1 represents empty space
     if (id == -1) {
       tile.setIcon(null);
-      // Causes JLabel to be resized and repainted
-      //tile.revalidate();
       return;
     }
 

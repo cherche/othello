@@ -8,7 +8,6 @@ public class State {
   public boolean isDone = false;
   public int currentTurn;
   public int nextTurn;
-  public int[] counts;
 
   public State() {}
 

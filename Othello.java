@@ -33,6 +33,7 @@ public class Othello {
    * A 2D array of all spcaes on the board
    */
   private int[][] board;
+  private ArrayList<Entry> log = new ArrayList<Entry>();
 
   public Othello(int width, int height) {
     this.width = width;
@@ -47,8 +48,30 @@ public class Othello {
     this.board = new int[width][height];
   }
 
+  public void revert(int index) {
+    try {
+      Entry entry = log.get(index);
+      this.turn = entry.turn;
+      this.board = entry.board;
+      log = new ArrayList<Entry>(log.subList(0, index));
+    } catch (Exception e) {
+
+    }
+  }
+
+  public void undo() {
+    // Revert to last entry
+    revert(log.size() - 1);
+  }
+
   public int getTurn() {
     return turn;
+  }
+
+  public int getBoardValue(int[] pos) {
+    int x = pos[0];
+    int y = pos[1];
+    return board[x][y];
   }
 
   public void setBoardValue(int[] pos, int value) {
@@ -65,6 +88,7 @@ public class Othello {
    */
   public State makeMove(int[] pos) {
     // We assume that the move is valid
+    log.add(new Entry(turn, getBoardClone()));
     State state = new State();
     int attacker = turn + 1;
     // Returning the coordinates of the captured tiles makes
@@ -93,7 +117,6 @@ public class Othello {
     // If we cycled through all turns and no one could go,
     // getNextTurn() should have returned -1
     state.isDone = turn == -1;
-    state.counts = getCounts();
     return state;
   }
 
@@ -228,12 +251,6 @@ public class Othello {
     return (getBoardValue(pos) == 0) && (getCaptures(pos, attacker).size() > 0);
   }
 
-  private int getBoardValue(int[] pos) {
-    int x = pos[0];
-    int y = pos[1];
-    return board[x][y];
-  }
-
   /**
    * Determines whether the current player has a valid move
    *
@@ -258,7 +275,7 @@ public class Othello {
    *
    * @return the tile counts for each player
    */
-  private int[] getCounts() {
+  public int[] getCounts() {
     int[] counts = new int[playerCount];
 
     // In this case, order of iteration is irrelevant
@@ -277,5 +294,17 @@ public class Othello {
     }
 
     return counts;
+  }
+
+  private int[][] getBoardClone() {
+    int[][] clone = new int[width][height];
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        clone[x][y] = board[x][y];
+      }
+    }
+
+    return clone;
   }
 }
