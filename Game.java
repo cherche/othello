@@ -127,14 +127,14 @@ public class Game extends JPanel implements ActionListener {
     initTileIcons();
     JPanel content = new Game();
     // We want to design around a 6:5 viewport
-    content.setPreferredSize(new Dimension(600, 500));
+    content.setPreferredSize(new Dimension(648, 540));
     frame = new JFrame("Othello");
     frame.setContentPane(content);
     // Setting the window size directly actually includes the title bar
     // in the height, which means that a window size of (600, 500)
     // would leave maybe (600, 480) for our actual content
     frame.pack();
-    frame.setResizable(false);
+    //frame.setResizable(false);
     // Centres the window on the screen
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
@@ -148,13 +148,13 @@ public class Game extends JPanel implements ActionListener {
     mainLayout = new CardLayout();
     main = new JPanel(mainLayout);
     main.setBackground(BACK);
-    main.setPreferredSize(new Dimension(500, 500));
+    //main.setPreferredSize(new Dimension(500, 500));
     JPanel menu = initMenu();
     main.add(menu, "menu");
     // GridLayout() takes row count then column count
     // That results in this weird ordering of (height, width),
     // but it's totally right - just a bit weird
-    JPanel boardContainer = initBoardContainer();
+    JPanel boardContainer = initBoardScreen();
     main.add(boardContainer, "boardContainer");
     this.add(main, BorderLayout.CENTER);
   }
@@ -184,16 +184,24 @@ public class Game extends JPanel implements ActionListener {
   }
 
   private JPanel initSidebar() {
-    JPanel sidebar = new JPanel(new GridLayout(5, 0));
+    JPanel sidebar = new JPanel(new BorderLayout());
     sidebar.setBackground(FORWARD_BACK);
-    sidebar.setPreferredSize(new Dimension(100, 500));
+    sidebar.setPreferredSize(new Dimension(108, 540));
+    JPanel top = new JPanel(new GridLayout(2, 0));
     JButton home = createSidebarButton("home", "home", this);
-    sidebar.add(home);
+    top.add(home);
     JButton undo = createSidebarButton("undo", "undo", this);
-    sidebar.add(undo);
+    top.add(undo);
+    top.setOpaque(false);
+    top.setPreferredSize(new Dimension(108, 216));
+    sidebar.add(top, BorderLayout.NORTH);
+    JPanel center = new JPanel(new GridBagLayout());
     indicator = new JLabel();
     indicator.setHorizontalAlignment(JLabel.CENTER);
     indicator.setOpaque(false);
+    center.add(indicator);
+    center.setOpaque(false);
+    sidebar.add(center, BorderLayout.CENTER);
     // Basically, these are the ones that should only be visible
     // when the board is visible
     boardSidebarComponents = new JComponent[] {
@@ -202,9 +210,12 @@ public class Game extends JPanel implements ActionListener {
       indicator
     };
     setSidebarMode(false);
-    sidebar.add(indicator);
-    sidebar.add(createSidebarButton("instructions", "instructions", this));
-    sidebar.add(createSidebarButton("settings", "settings", this));
+    JPanel bottom = new JPanel(new GridLayout(2, 0));
+    bottom.add(createSidebarButton("instructions", "instructions", this));
+    bottom.add(createSidebarButton("settings", "settings", this));
+    bottom.setOpaque(false);
+    bottom.setPreferredSize(new Dimension(108, 216));
+    sidebar.add(bottom, BorderLayout.SOUTH);
     return sidebar;
   }
 
@@ -215,9 +226,9 @@ public class Game extends JPanel implements ActionListener {
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     JLabel title = new JLabel("Othello");
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
-    title.setFont(new Font("Gill Sans", Font.PLAIN, 52));
+    title.setFont(new Font("Gill Sans", Font.PLAIN, 60));
     title.setForeground(FORE);
-    title.setBorder(new EmptyBorder(0, 0, 10, 0));
+    title.setBorder(new EmptyBorder(0, 0, 15, 0));
     container.add(title);
     // I just moved this to a new method because it was
     // a huge pain to read right here. This is for readability.
@@ -226,7 +237,7 @@ public class Game extends JPanel implements ActionListener {
     JPanel configField = initPlayerCountField();
     container.add(configField);
     play = createIconButton("icons/menu/play.png", "play", this);
-    play.setBorder(new EmptyBorder(30, 0, 0, 0));
+    play.setBorder(new EmptyBorder(45, 0, 0, 0));
     play.setOpaque(false);
     play.setAlignmentX(Component.CENTER_ALIGNMENT);
     container.add(play);
@@ -236,35 +247,17 @@ public class Game extends JPanel implements ActionListener {
     return menu;
   }
 
-  private static void initIndicatorIcons() {
-    int MAX_PLAYER_COUNT = 3;
-    indicatorIcons = new ImageIcon[MAX_PLAYER_COUNT];
-
-    for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
-      indicatorIcons[i] = createImageIcon("icons/turns/indicators/" + i + ".png");
-    }
-  }
-
-  private static void initTileIcons() {
-    int MAX_PLAYER_COUNT = 3;
-    tileIcons = new ImageIcon[MAX_PLAYER_COUNT];
-
-    for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
-      tileIcons[i] = createImageIcon("icons/turns/tiles/" + i + ".png");
-    }
-  }
-
   private JPanel initPlayerCountField() {
     JPanel pair = new JPanel();
     JLabel label = new JLabel(createImageIcon("icons/menu/player-count.png"));
-    label.setBorder(new EmptyBorder(0, 10, 0, 5));
+    label.setBorder(new EmptyBorder(0, 15, 0, 5));
     /*
     label.setFont(new Font("Open Sans", Font.PLAIN, 36));
     label.setForeground(FORE);
     */
     pair.add(label);
     JTextField field = new JTextField("2", 2);
-    field.setFont(new Font("Open Sans", Font.PLAIN, 36));
+    field.setFont(new Font("Open Sans", Font.PLAIN, 44));
     field.setForeground(FORE);
     field.setOpaque(false);
     field.setHorizontalAlignment(JTextField.CENTER);
@@ -296,18 +289,23 @@ public class Game extends JPanel implements ActionListener {
     return pair;
   }
 
-  private static JPanel initBoardContainer() {
+  private static JPanel initBoardScreen() {
+    JPanel boardScreen = new JPanel(new BorderLayout());
+    JLabel status = new JLabel("Status");
+    boardScreen.add(status, BorderLayout.NORTH);
     // GridBagLayout vertically and horizontally centres its children by default
-    JPanel boardContainer = new JPanel(new GridBagLayout());
+    JPanel container = new JPanel(new GridBagLayout());
     JPanel board = createBoard();
-    board.setBackground(BACK);
     // Here, we might do some calculations to figure out
     // how big to make the board
-    board.setPreferredSize(new Dimension(480, 480));
     // This will do for now
-    boardContainer.add(board);
-    boardContainer.setOpaque(false);
-    return boardContainer;
+    board.setPreferredSize(new Dimension(512, 512));
+    board.setOpaque(false);
+    container.add(board);
+    container.setOpaque(false);
+    boardScreen.add(container, BorderLayout.CENTER);
+    boardScreen.setBackground(BACK);
+    return boardScreen;
   }
 
   private static JPanel createBoard() {
@@ -336,6 +334,24 @@ public class Game extends JPanel implements ActionListener {
     return board;
   }
 
+  private static void initIndicatorIcons() {
+    int MAX_PLAYER_COUNT = 3;
+    indicatorIcons = new ImageIcon[MAX_PLAYER_COUNT];
+
+    for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
+      indicatorIcons[i] = createImageIcon("icons/turns/indicators/" + i + ".png");
+    }
+  }
+
+  private static void initTileIcons() {
+    int MAX_PLAYER_COUNT = 3;
+    tileIcons = new ImageIcon[MAX_PLAYER_COUNT];
+
+    for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
+      tileIcons[i] = createImageIcon("icons/turns/tiles/" + i + ".png");
+    }
+  }
+
   public void actionPerformed(ActionEvent e) {
     String actionCommand = e.getActionCommand();
 
@@ -347,6 +363,9 @@ public class Game extends JPanel implements ActionListener {
       setSidebarMode(false);
       mainLayout.show(main, "menu");
     } else if ("undo".equals(actionCommand)) {
+      // Technically, we don't need to reenable the game,
+      // but I want to since it's nice (especially for debugging)
+      isDone = false;
       othello.undo();
       indicator.setIcon(indicatorIcons[othello.getTurn()]);
 

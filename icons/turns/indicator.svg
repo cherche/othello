@@ -15,10 +15,10 @@
    id="svg5572"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="turn.svg"
-   inkscape:export-filename="/Users/Ryan/github/othello/icons/turns/2.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   sodipodi:docname="indicator.svg"
+   inkscape:export-filename="/Users/Ryan/github/othello/icons/turns/indicators/2.png"
+   inkscape:export-xdpi="97.5"
+   inkscape:export-ydpi="97.5">
   <defs
      id="defs5574" />
   <sodipodi:namedview
@@ -29,15 +29,15 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="29.255002"
+     inkscape:cx="-38.425218"
      inkscape:cy="43.089347"
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
      showgrid="false"
-     inkscape:window-width="768"
-     inkscape:window-height="557"
-     inkscape:window-x="424"
-     inkscape:window-y="127"
+     inkscape:window-width="958"
+     inkscape:window-height="700"
+     inkscape:window-x="120"
+     inkscape:window-y="6"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -104,13 +104,14 @@
   <g
      inkscape:groupmode="layer"
      id="layer4"
-     inkscape:label="2">
+     inkscape:label="2"
+     style="display:inline">
     <circle
        r="32"
        cy="36"
        cx="36"
        id="circle6141-11"
-       style="opacity:1;fill:#777777;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;fill:#ffcc00;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        inkscape:export-filename="/Users/Ryan/github/othello/icons/1.png" />

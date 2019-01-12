@@ -7,13 +7,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 128 64.000001"
+   viewBox="0 0 144 72.000001"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="play.svg"
-   width="128"
-   height="64"
+   width="144"
+   height="72"
    inkscape:export-filename="/Users/Ryan/github/othello/icons/menu/play-disabled.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -25,7 +25,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -45,8 +45,8 @@
      id="namedview6"
      showgrid="false"
      inkscape:zoom="0.921875"
-     inkscape:cx="-61.693493"
-     inkscape:cy="6.0569055"
+     inkscape:cx="-264.13417"
+     inkscape:cy="10.056906"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
@@ -60,6 +60,7 @@
      id="layer4"
      inkscape:label="Reg"
      style="display:inline"
+     transform="translate(8,4)"
      sodipodi:insensitive="true">
     <g
        inkscape:groupmode="layer"
@@ -69,19 +70,19 @@
       <rect
          style="opacity:1;fill:#009c8a;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect4309"
-         width="128"
-         height="64"
-         x="0"
-         y="0"
-         rx="36"
-         ry="32" />
+         width="144"
+         height="72"
+         x="-8"
+         y="-4"
+         rx="40.5"
+         ry="36" />
     </g>
     <g
        inkscape:groupmode="layer"
        id="layer3"
        inkscape:label="Play">
       <path
-         d="M 80.315131,29.04689 55.171571,14.182184 c -2.04292,-1.207176 -5.17157,-0.03571 -5.17157,2.950084 l 0,29.722257 c 0,2.678643 2.90722,4.292979 5.17157,2.950083 l 25.14356,-14.857557 c 2.24292,-1.321462 2.25006,-4.578698 0,-5.900161 z"
+         d="M 82.104523,28.677751 53.818017,11.954956 C 51.519731,10.596883 48,11.914782 48,15.273801 l 0,33.437541 c 0,3.013473 3.270623,4.829601 5.818017,3.318843 L 82.104523,35.315433 c 2.523285,-1.486645 2.531317,-5.151036 0,-6.637682 z"
          id="path4"
          style="display:inline;fill:#ffffff"
          inkscape:connector-curvature="0" />
@@ -92,6 +93,7 @@
      id="layer6"
      inkscape:label="Disabled"
      style="display:none"
+     transform="translate(8,4)"
      sodipodi:insensitive="true">
     <g
        inkscape:groupmode="layer"
@@ -99,12 +101,12 @@
        inkscape:label="Button"
        style="display:inline">
       <rect
-         ry="32"
-         rx="36"
-         y="0"
-         x="0"
-         height="64"
-         width="128"
+         ry="36"
+         rx="40.5"
+         y="-4"
+         x="-8"
+         height="72"
+         width="144"
          id="rect4309-6"
          style="opacity:1;fill:#7d828e;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
@@ -114,7 +116,7 @@
        inkscape:label="Play 1"
        style="display:inline">
       <path
-         d="M 80.315131,29.04689 55.171571,14.182184 c -2.04292,-1.207176 -5.17157,-0.03571 -5.17157,2.950084 l 0,29.722257 c 0,2.678643 2.90722,4.292979 5.17157,2.950083 l 25.14356,-14.857557 c 2.24292,-1.321462 2.25006,-4.578698 0,-5.900161 z"
+         d="M 82.104523,28.677751 53.818017,11.954956 C 51.519731,10.596883 48,11.914782 48,15.273801 l 0,33.437541 c 0,3.013473 3.270623,4.829601 5.818017,3.318843 L 82.104523,35.315433 c 2.523285,-1.486645 2.531317,-5.151036 0,-6.637682 z"
          id="path4-9"
          style="display:inline;fill:#32363e;fill-opacity:1"
          inkscape:connector-curvature="0" />
