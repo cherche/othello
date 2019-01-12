@@ -237,25 +237,27 @@ public class Game extends JPanel implements ActionListener {
   private JPanel initMenu() {
     // GridBagLayout centres its children by default
     JPanel menu = new JPanel(new GridBagLayout());
-    JPanel container = new JPanel();
-    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    JPanel container = new JPanel(new BorderLayout());
     JLabel title = new JLabel("Othello");
     title.setAlignmentX(Component.CENTER_ALIGNMENT);
     title.setFont(TITLE_FONT);
     title.setForeground(FORE);
     title.setBorder(new EmptyBorder(0, 0, 15, 0));
-    container.add(title);
+    container.add(title, BorderLayout.NORTH);
+    JPanel config = new JPanel(new GridBagLayout());
     // I just moved this to a new method because it was
     // a huge pain to read right here. This is for readability.
     // Actually, all the init methods are for readability and maintainability.
     // They don't actually generalize anything, unlike the create methods.
     JPanel configField = initPlayerCountField();
-    container.add(configField);
+    config.add(configField);
+    config.setOpaque(false);
+    container.add(config, BorderLayout.CENTER);
     play = createIconButton("icons/menu/play.png", "play", this);
-    play.setBorder(new EmptyBorder(45, 0, 0, 0));
+    play.setBorder(new EmptyBorder(30, 0, 0, 0));
     play.setOpaque(false);
     play.setAlignmentX(Component.CENTER_ALIGNMENT);
-    container.add(play);
+    container.add(play, BorderLayout.SOUTH);
     container.setOpaque(false);
     menu.add(container);
     menu.setOpaque(false);
@@ -265,7 +267,7 @@ public class Game extends JPanel implements ActionListener {
   private JPanel initPlayerCountField() {
     JPanel pair = new JPanel();
     JLabel label = new JLabel(createImageIcon("icons/menu/player-count.png"));
-    label.setBorder(new EmptyBorder(0, 5, 0, 5));
+    label.setBorder(new EmptyBorder(0, 15, 0, 5));
     pair.add(label);
     JTextField field = new JTextField("2", 2);
     field.setFont(INFO_FONT);
