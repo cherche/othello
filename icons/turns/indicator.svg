@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="indicator.svg"
-   inkscape:export-filename="/Users/Ryan/github/othello/icons/turns/indicators/2.png"
+   inkscape:export-filename="/Users/Ryan/github/othello/icons/turns/indicators/3.png"
    inkscape:export-xdpi="97.5"
    inkscape:export-ydpi="97.5">
   <defs
@@ -29,10 +29,10 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="-38.425218"
+     inkscape:cx="-55.597811"
      inkscape:cy="43.089347"
      inkscape:document-units="px"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer5"
      showgrid="false"
      inkscape:window-width="958"
      inkscape:window-height="700"
@@ -74,7 +74,7 @@
      id="layer2"
      inkscape:label="0"
      sodipodi:insensitive="true"
-     style="display:none">
+     style="display:inline">
     <circle
        r="32"
        cy="36"
@@ -105,13 +105,30 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="2"
-     style="display:inline">
+     style="display:none"
+     sodipodi:insensitive="true">
     <circle
        r="32"
        cy="36"
        cx="36"
        id="circle6141-11"
        style="opacity:1;fill:#ffcc00;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       inkscape:export-filename="/Users/Ryan/github/othello/icons/1.png" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="3"
+     style="display:none"
+     sodipodi:insensitive="true">
+    <circle
+       r="32"
+       cy="36"
+       cx="36"
+       id="circle6141-11-5"
+       style="display:inline;opacity:1;fill:#c34566;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        inkscape:export-filename="/Users/Ryan/github/othello/icons/1.png" />

@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="tile.svg"
-   inkscape:export-filename="/Users/Ryan/github/othello/icons/turns/tiles/2.png"
+   inkscape:export-filename="/Users/Ryan/github/othello/icons/turns/tiles/3.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -29,10 +29,10 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="5.0519511"
-     inkscape:cy="39.089347"
+     inkscape:cx="8.0824087"
+     inkscape:cy="18.886296"
      inkscape:document-units="px"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer4"
      showgrid="false"
      inkscape:window-width="768"
      inkscape:window-height="557"
@@ -60,7 +60,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="0"
-     style="display:none"
+     style="display:inline"
      transform="translate(-4,-8)"
      sodipodi:insensitive="true">
     <circle
@@ -93,13 +93,30 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="2"
-     style="display:inline">
+     style="display:none"
+     sodipodi:insensitive="true">
     <circle
        r="26"
        cy="30"
        cx="30"
        id="circle6141-5"
        style="display:inline;opacity:1;fill:#ffcc00;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       inkscape:export-filename="/Users/Ryan/github/othello/icons/1.png" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="3"
+     sodipodi:insensitive="true"
+     style="display:none">
+    <circle
+       r="26"
+       cy="30"
+       cx="30"
+       id="circle6141-5-5"
+       style="display:inline;opacity:1;fill:#c34566;fill-opacity:1;stroke:none;stroke-width:6;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        inkscape:export-filename="/Users/Ryan/github/othello/icons/1.png" />

@@ -24,6 +24,7 @@ public class Game extends JPanel implements ActionListener {
   private static Color FORWARD_BACK = new Color(40, 44, 53);
   private static Color BOARD_BACK = new Color(0, 187, 84);
   private static Color BOARD_OUTLINE = BOARD_BACK.darker();
+  private static int MAX_PLAYER_COUNT = 4;
   private static boolean isDone = false;
   private static JFrame frame;
   private static JPanel main;
@@ -381,7 +382,6 @@ public class Game extends JPanel implements ActionListener {
   }
 
   private static void initIndicatorIcons() {
-    int MAX_PLAYER_COUNT = 3;
     indicatorIcons = new ImageIcon[MAX_PLAYER_COUNT];
 
     for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
@@ -390,7 +390,6 @@ public class Game extends JPanel implements ActionListener {
   }
 
   private static void initTileIcons() {
-    int MAX_PLAYER_COUNT = 3;
     tileIcons = new ImageIcon[MAX_PLAYER_COUNT];
 
     for (int i = 0; i < MAX_PLAYER_COUNT; i++) {
@@ -448,24 +447,23 @@ public class Game extends JPanel implements ActionListener {
       // We should have different initial boards for each playerCount
       if (playerCount == 2) {
         initialBoard = new int[][] {
-          {3, 3, 1},
-          {4, 4, 1},
           {3, 4, 0},
-          {4, 3, 0}
+          {4, 3, 0},
+          {3, 3, 1},
+          {4, 4, 1}
         };
       } else if (playerCount == 3) {
         initialBoard = new int[][] {
-          {3, 3, 1},
-          {4, 4, 1},
-          {3, 4, 2},
-          {4, 3, 0}
+          {5, 1, 0}, {6, 2, 0}, {5, 2, 1}, {6, 1, 1},
+          {1, 3, 1}, {2, 4, 1}, {2, 3, 2}, {1, 4, 2},
+          {4, 5, 2}, {5, 6, 2}, {5, 5, 0}, {4, 6, 0}
         };
       } else {
         initialBoard = new int[][] {
-          {3, 3, 1},
-          {4, 4, 1},
-          {3, 4, 0},
-          {4, 3, 0}
+          {2, 1, 0}, {3, 2, 0}, {3, 1, 1}, {2, 2, 1},
+          {1, 4, 1}, {2, 5, 1}, {2, 4, 2}, {1, 5, 2},
+          {4, 5, 2}, {5, 6, 2}, {5, 5, 3}, {4, 6, 3},
+          {5, 2, 3}, {6, 3, 3}, {6, 2, 0}, {5, 3, 0}
         };
       }
 
@@ -505,7 +503,7 @@ public class Game extends JPanel implements ActionListener {
     try {
       int value = Integer.parseInt(playerCountField.getText());
 
-      if (2 <= value && value <= 4) {
+      if (2 <= value && value <= MAX_PLAYER_COUNT) {
         return value;
       } else {
         return -1;
