@@ -28,6 +28,7 @@ public class Game extends JPanel implements ActionListener {
   private static Color BOARD_BACK = new Color(0, 187, 84);
   private static Color BOARD_OUTLINE = BOARD_BACK.darker();
   private static int MAX_PLAYER_COUNT = 4;
+  private static float SOUND_EFFECT_VOLUME = 1.0f;
   private static boolean isDone = false;
   private static JFrame settings;
   private static JFrame instructions;
@@ -82,7 +83,7 @@ public class Game extends JPanel implements ActionListener {
       int[] pos = {id / height, id % height};
 
       if (!othello.isValidMove(pos, othello.getTurn() + 1)) {
-        playClip("audio/invalid-move.wav");
+        playSoundEffect("audio/invalid-move.wav");
         status.setText("That is not a valid move.");
         return;
       }
@@ -101,11 +102,11 @@ public class Game extends JPanel implements ActionListener {
 
       if (isDone) {
         status.setText("The game is finished.");
-        playClip("audio/game-over.wav");
+        playSoundEffect("audio/game-over.wav");
         // We don't want to update the turn indicator if the game is over
         return;
       } else {
-        playClip("audio/tile-placed/" + clipName + ".wav");
+        playSoundEffect("audio/tile-placed/" + clipName + ".wav");
       }
 
       if (state.nextTurn != (state.currentTurn + 1) % playerCount) {
@@ -485,7 +486,7 @@ public class Game extends JPanel implements ActionListener {
       othello.undo();
       updateCountPanels();
       indicator.setIcon(indicatorIcons[othello.getTurn()]);
-      playClip("audio/undo.wav");
+      playSoundEffect("audio/undo.wav");
       status.setText("The last move was undone.");
 
       for (int x = 0; x < width; x++) {
@@ -554,7 +555,7 @@ public class Game extends JPanel implements ActionListener {
       updateCountPanels();
       // Reset turn indicator
       indicator.setIcon(indicatorIcons[0]);
-      playClip("audio/play.wav");
+      playSoundEffect("audio/play.wav");
       // Reset status text
       status.setText(" ");
     }
@@ -600,7 +601,7 @@ public class Game extends JPanel implements ActionListener {
     }
   }
 
-  private static void playClip(String path) {
+  private static void playClip(String path, float gain) {
 
     // We need the try-catch since there is some chance that the path is wrong
     // or that the audio file isn't acceptable
@@ -608,11 +609,36 @@ public class Game extends JPanel implements ActionListener {
       java.net.URL url = Game.class.getResource(path);
       AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
       Clip clip = AudioSystem.getClip();
-      // Open and play (obviously)
       clip.open(audioIn);
+      FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+      gainControl.setValue(gain);
       clip.start();
     } catch (Exception e) {
       System.out.println("Cannot open resource at \"" + path + "\".");
     }
+  }
+
+  private static void playSoundEffect(String path) {
+    // This is a little hack-y, but since gain is in decibels,
+    // we technically can never have total silence
+    // In this case, we do actually want silence
+    if (SOUND_EFFECT_VOLUME == 0f) {
+      return;
+    }
+
+    // Suppose that I is the intensity of the sound,
+    // I_0 is defined to be the intensity at 0 dB,
+    // and \beta is the decibel measure of loudness
+    // I = I_0 10^{\beta / 10}
+    // Now if we are given two intensities I_2 and I_1,
+    // their ratio yields:
+    // I_2 / I_1 = 10^{(\beta_2 - \beta_1)/10}
+    // So we may conclude that the gain should be
+    // \beta_2 - \beta_1 = 10log_10(I_2 / I_1)
+    // Substituting I_1 with 1 finally yields
+    // \beta_2 - \beta_1 = 10log_10(I_2)
+    float gain = (float) (10 * (Math.log(SOUND_EFFECT_VOLUME) / Math.log(10)));
+    // We better hope that this doesn't throw gigantic numbers at us
+    playClip(path, gain);
   }
 }
