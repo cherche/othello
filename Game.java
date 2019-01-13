@@ -240,6 +240,11 @@ public class Game extends JPanel implements ActionListener {
     instructions.setLocationRelativeTo(null);
   }
 
+  /**
+   * Creates a panel containing just a JLabel with an icon
+   *
+   * @return a panel
+   */
   public static JPanel createDiagram(String path) {
     JPanel panel = new JPanel();
     JLabel label = new JLabel(createImageIcon(path));
@@ -248,6 +253,11 @@ public class Game extends JPanel implements ActionListener {
     return panel;
   }
 
+  /**
+   * Creates a textarea with wrapping
+   *
+   * @return a textarea
+   */
   public static JTextArea createTextArea(String text) {
     JTextArea textArea = new JTextArea(text);
     textArea.setEditable(false);
@@ -279,6 +289,14 @@ public class Game extends JPanel implements ActionListener {
     this.add(main, BorderLayout.CENTER);
   }
 
+  /**
+   * Creates a transparent button with an icon
+   *
+   * @param iconURL the path to the icon
+   * @param actionCommand the action command
+   * @param actionListener an actionListener
+   * @return a button
+   */
   private static JButton createIconButton(String iconURL, String actionCommand, ActionListener actionListener) {
     JButton button = new JButton();
     button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -291,12 +309,25 @@ public class Game extends JPanel implements ActionListener {
     return button;
   }
 
+  /**
+   * Creates a transparent button with an icon given the sidebar icon name
+   *
+   * @param name the name of the sidebar icon
+   * @param actionCommand the action command
+   * @param actionListener an actionListener
+   * @return a button
+   */
   private static JButton createSidebarButton(String name, String actionCommand, ActionListener actionListener) {
     String iconURL = "icons/sidebar/" + name + ".png";
     JButton button = createIconButton(iconURL, actionCommand, actionListener);
     return button;
   }
 
+  /**
+   * Sets the visibility of the board sidebar components
+   *
+   * @param isVisible whether the components should be visible
+   */
   private static void setSidebarMode(boolean isVisible) {
     for (int i = 0; i < boardSidebarComponents.length; i++) {
       boardSidebarComponents[i].setVisible(isVisible);
@@ -414,7 +445,6 @@ public class Game extends JPanel implements ActionListener {
     // We want the components in this panel to stick together,
     // but overall, everything hsould be centred
     JPanel container = new JPanel(new BorderLayout());
-    JPanel board = createBoard();
     // Here, we might do some calculations to figure out
     // how big to make the board
     // This will do for now
@@ -440,7 +470,10 @@ public class Game extends JPanel implements ActionListener {
     return boardScreen;
   }
 
-  private static JPanel createBoard() {
+  /**
+   * Updates the board using the new settings
+   */
+  private static void resetBoard() {
     // We wipe it in case the dimensions of the board change
     board.removeAll();
     board.setLayout(new GridLayout(height, width));
@@ -464,7 +497,43 @@ public class Game extends JPanel implements ActionListener {
       }
     }
 
-    return board;
+    // We should basically define an initial board depending
+    // on the number of players manually
+    // I don't know of a mathematical way to generate symmetrical
+    // positions for all possible board sizes and player counts
+    int[][] initialBoard;
+
+    // We should have different initial boards for each playerCount
+    if (playerCount == 2) {
+      initialBoard = new int[][] {
+        {3, 4, 0},
+        {4, 3, 0},
+        {3, 3, 1},
+        {4, 4, 1}
+      };
+    } else if (playerCount == 3) {
+      initialBoard = new int[][] {
+        {5, 1, 0}, {6, 2, 0}, {5, 2, 1}, {6, 1, 1},
+        {1, 3, 1}, {2, 4, 1}, {2, 3, 2}, {1, 4, 2},
+        {4, 5, 2}, {5, 6, 2}, {5, 5, 0}, {4, 6, 0}
+      };
+    } else {
+      initialBoard = new int[][] {
+        {2, 1, 0}, {3, 2, 0}, {3, 1, 1}, {2, 2, 1},
+        {1, 4, 1}, {2, 5, 1}, {2, 4, 2}, {1, 5, 2},
+        {4, 5, 2}, {5, 6, 2}, {5, 5, 3}, {4, 6, 3},
+        {5, 2, 3}, {6, 3, 3}, {6, 2, 0}, {5, 3, 0}
+      };
+    }
+
+    for (int i = 0; i < initialBoard.length; i++) {
+      int[] triplet = initialBoard[i];
+      int[] pos = {triplet[0], triplet[1]};
+      int val = triplet[2];
+      // Since a blank space is 0 in storage (for our purposes)
+      othello.setBoardValue(pos, val + 1);
+      setTile(pos, val);
+    }
   }
 
   private static void updateCountsContainer() {
@@ -570,47 +639,10 @@ public class Game extends JPanel implements ActionListener {
       isDone = false;
       setSidebarMode(true);
       mainLayout.show(main, "boardContainer");
+      othello = new Othello(width, height, playerCount);
       // Technically speaking, it's pretty inefficient to rebuild the board
       // every time, but I'll leave efficiency for a later date
-      createBoard();
-      othello = new Othello(width, height, playerCount);
-      // We should basically define an initial board depending
-      // on the number of players manually
-      // I don't know of a mathematical way to generate symmetrical
-      // positions for all possible board sizes and player counts
-      int[][] initialBoard;
-
-      // We should have different initial boards for each playerCount
-      if (playerCount == 2) {
-        initialBoard = new int[][] {
-          {3, 4, 0},
-          {4, 3, 0},
-          {3, 3, 1},
-          {4, 4, 1}
-        };
-      } else if (playerCount == 3) {
-        initialBoard = new int[][] {
-          {5, 1, 0}, {6, 2, 0}, {5, 2, 1}, {6, 1, 1},
-          {1, 3, 1}, {2, 4, 1}, {2, 3, 2}, {1, 4, 2},
-          {4, 5, 2}, {5, 6, 2}, {5, 5, 0}, {4, 6, 0}
-        };
-      } else {
-        initialBoard = new int[][] {
-          {2, 1, 0}, {3, 2, 0}, {3, 1, 1}, {2, 2, 1},
-          {1, 4, 1}, {2, 5, 1}, {2, 4, 2}, {1, 5, 2},
-          {4, 5, 2}, {5, 6, 2}, {5, 5, 3}, {4, 6, 3},
-          {5, 2, 3}, {6, 3, 3}, {6, 2, 0}, {5, 3, 0}
-        };
-      }
-
-      for (int i = 0; i < initialBoard.length; i++) {
-        int[] triplet = initialBoard[i];
-        int[] pos = {triplet[0], triplet[1]};
-        int val = triplet[2];
-        // Since a blank space is 0 in storage (for our purposes)
-        othello.setBoardValue(pos, val + 1);
-        setTile(pos, val);
-      }
+      resetBoard();
 
       // Update counts (and perhaps reset)
       updateCountsContainer();
@@ -623,6 +655,12 @@ public class Game extends JPanel implements ActionListener {
     }
   }
 
+  /**
+   * Sets the icon of a board tile
+   *
+   * @param pos the position
+   * @param id the name of the image
+   */
   private static void setTile(int[] pos, int id) {
     int x = pos[0];
     int y = pos[1];

@@ -48,6 +48,11 @@ public class Othello {
     this.board = new int[width][height];
   }
 
+  /**
+   * Reverts the instance to an earlier snapshot
+   *
+   * @param index the index of the entry in the log
+   */
   public void revert(int index) {
     try {
       Entry entry = log.get(index);
@@ -59,25 +64,50 @@ public class Othello {
     }
   }
 
+  /**
+   * Reverts the instance to the previous snapshot
+   */
   public void undo() {
     // Revert to last entry
     revert(log.size() - 1);
   }
 
+  /**
+   * Gets the size of the log
+   *
+   * @return the size of the log
+   */
   public int getLogSize() {
     return log.size();
   }
 
+  /**
+   * Gets the turn
+   *
+   * @return the turn number
+   */
   public int getTurn() {
     return turn;
   }
 
+  /**
+   * Gets the value of the board at a position
+   *
+   * @param pos the position
+   * @return the value at the position
+   */
   public int getBoardValue(int[] pos) {
     int x = pos[0];
     int y = pos[1];
     return board[x][y];
   }
 
+  /**
+   * Sets the value of the board at a position
+   *
+   * @param pos the position
+   * @param value the value at the position
+   */
   public void setBoardValue(int[] pos, int value) {
     int x = pos[0];
     int y = pos[1];
@@ -300,6 +330,11 @@ public class Othello {
     return counts;
   }
 
+  /**
+   * Creates a clone of the board so as not to mutate the original
+   *
+   * @return a clone of the board
+   */
   private int[][] getBoardClone() {
     int[][] clone = new int[width][height];
 

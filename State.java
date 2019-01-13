@@ -11,12 +11,16 @@ public class State {
 
   public State() {}
 
-  // Just for debugging
+  /**
+   * Creates a String of all of the variables of the instance
+   *
+   * @return a String of all the variables of the instance
+   */
   public String toString() {
     String string =
-      "isDone: " + isDone + "\n"
-      + "currentTurn: " + currentTurn
-      + "nextTurn: " + nextTurn;
+      "isDone: " + isDone
+      + "\ncurrentTurn: " + currentTurn
+      + "\nnextTurn: " + nextTurn;
 
     if (updates != null) {
       string += "\nupdates";
