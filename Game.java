@@ -234,15 +234,15 @@ public class Game extends JPanel implements ActionListener {
     button.setIcon(createImageIcon(iconURL));
     button.setActionCommand(actionCommand);
     button.addActionListener(actionListener);
-    button.setOpaque(true);
+    button.setOpaque(false);
     button.setBorderPainted(false);
+    button.setContentAreaFilled(false);
     return button;
   }
 
   private static JButton createSidebarButton(String name, String actionCommand, ActionListener actionListener) {
     String iconURL = "icons/sidebar/" + name + ".png";
     JButton button = createIconButton(iconURL, actionCommand, actionListener);
-    button.setOpaque(false);
     return button;
   }
 
