@@ -18,8 +18,8 @@ public class Game extends JPanel implements ActionListener {
   private static int playerCount = 2;
   private static Othello othello;
   private static Clip music;
-  private static double soundEffectVolume = 0.5;
-  private static double musicVolume = 1.0;
+  private static double soundEffectVolume = 1.0;
+  private static double musicVolume = 0.3;
   private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 72);
   private static Font INFO_FONT = new Font("Open Sans", Font.PLAIN, 44);
   private static Font NOTIFICATION_FONT = new Font("Open Sans", Font.PLAIN, 24);
