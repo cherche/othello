@@ -530,8 +530,12 @@ public class Game extends JPanel implements ActionListener {
       Object[] options = { "Continue", "Cancel" };
       JOptionPane.showOptionDialog(null, "Your progress will not be saved.", "Warning", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
       */
-      setSidebarMode(false);
-      mainLayout.show(main, "menu");
+      int choice = JOptionPane.showConfirmDialog(null, "Are you sure you wish to exit to the main menu? Your game will not be saved.", "Warning", JOptionPane.YES_NO_OPTION);
+
+      if (choice == 0) {
+        setSidebarMode(false);
+        mainLayout.show(main, "menu");
+      }
     } else if ("undo".equals(actionCommand)) {
       // If there are no moves to undo ... don't do anything
       if (othello.getLogSize() == 0) {
