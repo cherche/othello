@@ -4,7 +4,7 @@ import java.util.*;
  * Generalization of Reversi/Othello games
  *
  * @author  Ryan Nguyen
- * @version 2019-01-08
+ * @version 2019-01-14
  */
 public class Othello {
   /**
@@ -170,7 +170,7 @@ public class Othello {
       nextTurn = (nextTurn + 1) % playerCount;
       int attacker = nextTurn + 1;
 
-      if (hasValidMoves(attacker)) {
+      if (getValidMoves(attacker).size() > 0) {
         return nextTurn;
       }
     }
@@ -270,8 +270,28 @@ public class Othello {
     return (0 <= x && x < this.width) && (0 <= y && y < this.height);
   }
 
-  // This is nice but is pretty inefficient
-  // For us, we don't care too too much about efficiency, though ...
+  /**
+   * Gets all valid moves for an attacker
+   *
+   * @param attacker the attacker
+   * @return a list of the valid moves
+   */
+  public ArrayList<int[]> getValidMoves(int attacker) {
+    ArrayList<int[]> validMoves = new ArrayList<int[]>();
+
+    for (int x = 0; x < board.length; x++) {
+      for (int y = 0; y < board[x].length; y++) {
+        int[] pos = {x, y};
+
+        if (isValidMove(pos, attacker)) {
+          validMoves.add(pos);
+        }
+      }
+    }
+
+    return validMoves;
+  }
+
   /**
    * Determines whether a move is valid
    *
@@ -280,29 +300,24 @@ public class Othello {
    * @return whether or not a move is valid
    */
   public boolean isValidMove(int[] pos, int attacker) {
-    // Technically, this may be optimized since getCaptures
-    // doesn't stop as soon as it finds a valid move
+    // Only slightly inefficient since getCaptures()
+    // doesn't stop until it gets ALL the captures
     return (getBoardValue(pos) == 0) && (getCaptures(pos, attacker).size() > 0);
   }
 
-  /**
-   * Determines whether the current player has a valid move
-   *
-   * @return whether or not there is valid move for the current player
-   */
-  public boolean hasValidMoves(int attacker) {
-    for (int x = 0; x < board.length; x++) {
-      for (int y = 0; y < board[x].length; y++) {
-        int[] pos = {x, y};
+  /*
+  public static int getMoveIndex(ArrayList<int[]> list, int[] search) {
+    for (int i = 0; i < list.size(); i++) {
+      int[] pos = list.get(i);
 
-        if (isValidMove(pos, attacker)) {
-          return true;
-        }
+      if (pos[0] == search[0] && pos[1] == search[1]) {
+        return i;
       }
     }
 
-    return false;
+    return -1;
   }
+  */
 
   /**
    * Determines the tile counts for each player

@@ -10,7 +10,7 @@ import javax.sound.sampled.*;
  * A virtual Reversi, with some options
  *
  * @author  Ryan Nguyen
- * @version 2019-01-10
+ * @version 2019-01-13
  */
 public class Game extends JPanel implements ActionListener {
   private static int width = 8;
@@ -29,6 +29,7 @@ public class Game extends JPanel implements ActionListener {
   private static Color BACK = new Color(50, 54, 62);
   private static Color FORWARD_BACK = new Color(40, 44, 53);
   private static Color BOARD_BACK = new Color(0, 187, 84);
+  private static Color BOARD_HIGHLIGHT_BACK = BOARD_BACK.brighter();
   private static Color BOARD_OUTLINE = BOARD_BACK.darker();
   private static int MAX_PLAYER_COUNT = 4;
   private static boolean isDone = false;
@@ -85,15 +86,19 @@ public class Game extends JPanel implements ActionListener {
       */
 
       int[] pos = {id / height, id % height};
+      ArrayList<int[]> validMoves = othello.getValidMoves(othello.getTurn() + 1);
 
+      // If it's an invalid move, the position must not be in the validMoves list
       if (!othello.isValidMove(pos, othello.getTurn() + 1)) {
         playSoundEffect("audio/invalid-move.wav");
         status.setText("That is not a valid move.");
         return;
       }
+
       State state = othello.makeMove(pos);
       isDone = state.isDone;
       updateCountPanels();
+      setHighlightedTiles();
       status.setText(" ");
       ArrayList<int[]> updates = state.updates;
       int TILE_PLACED_VARIANTS = 3;
@@ -109,14 +114,13 @@ public class Game extends JPanel implements ActionListener {
         playSoundEffect("audio/game-over.wav");
         // We don't want to update the turn indicator if the game is over
         return;
-      } else {
-        playSoundEffect("audio/tile-placed/" + clipName + ".wav");
       }
 
       if (state.nextTurn != (state.currentTurn + 1) % playerCount) {
         status.setText("Turns were skipped.");
       }
 
+      playSoundEffect("audio/tile-placed/" + clipName + ".wav");
       indicator.setIcon(indicatorIcons[state.nextTurn]);
     }
 
@@ -471,6 +475,26 @@ public class Game extends JPanel implements ActionListener {
   }
 
   /**
+   * Highlights the board tiles depending on whether they are valid moves
+   */
+  private static void setHighlightedTiles() {
+    ArrayList<int[]> validMoves = othello.getValidMoves(othello.getTurn() + 1);
+
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < height; y++) {
+        int[] pos = {x, y};
+        JLabel tile = tiles[x][y];
+
+        if (othello.isValidMove(pos, othello.getTurn() + 1)) {
+          tile.setBackground(BOARD_HIGHLIGHT_BACK);
+        } else {
+          tile.setBackground(BOARD_BACK);
+        }
+      }
+    }
+  }
+
+  /**
    * Updates the board using the new settings
    */
   private static void resetBoard() {
@@ -534,6 +558,8 @@ public class Game extends JPanel implements ActionListener {
       othello.setBoardValue(pos, val + 1);
       setTile(pos, val);
     }
+
+    setHighlightedTiles();
   }
 
   private static void updateCountsContainer() {
@@ -616,6 +642,7 @@ public class Game extends JPanel implements ActionListener {
       isDone = false;
       othello.undo();
       updateCountPanels();
+      setHighlightedTiles();
       indicator.setIcon(indicatorIcons[othello.getTurn()]);
       playSoundEffect("audio/undo.wav");
       status.setText("The last move was undone.");
