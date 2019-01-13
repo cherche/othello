@@ -19,7 +19,9 @@ public class Game extends JPanel implements ActionListener {
   private static Othello othello;
   private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 72);
   private static Font INFO_FONT = new Font("Open Sans", Font.PLAIN, 44);
-  private static Font BODY_FONT = new Font("Open Sans", Font.PLAIN, 24);
+  private static Font NOTIFICATION_FONT = new Font("Open Sans", Font.PLAIN, 24);
+  private static Font HEADING_FONT = new Font("Gill Sans", Font.PLAIN, 44);;
+  private static Font BODY_FONT = new Font("Open Sans", Font.PLAIN, 16);
   private static Color FORE = new Color(125, 130, 142);
   private static Color BACK = new Color(50, 54, 62);
   private static Color FORWARD_BACK = new Color(40, 44, 53);
@@ -147,14 +149,67 @@ public class Game extends JPanel implements ActionListener {
     settings.setSize(300, 300);
   }
 
+  // Thank God we don't need to do crazy stuff like this in web development
+  // Could you imagine making THIS many containers to display a webpage
+  // as we know it? It would be so frustrating.
   private static void initInstructions () {
+    JPanel everything = new JPanel(new BorderLayout());
+    JLabel heading = new JLabel("Instructions");
+    heading.setFont(HEADING_FONT);
+    heading.setForeground(FORE);
+    heading.setHorizontalAlignment(JLabel.CENTER);
+    everything.add(heading, BorderLayout.NORTH);
+    JPanel container = new JPanel();
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    container.add(createTextArea("1. Capture stones by surrounding them on both sides (horizontally, vertically, or diagonally) with your own."));
+    container.add(createDiagram("images/1.png"));
+    container.add(createTextArea("2. Your turn will be skipped if, and only if, you cannot capture any stones."));
+    container.add(createTextArea("3. Once all players skip in a row, the game is over. Although this will inevitably happen when the board is full, it could occur earlier."));
+    container.add(createDiagram("images/3.png"));
+    container.add(createTextArea("4. The player with the most tiles at the end of the game wins."));
+    container.add(createDiagram("images/4.png"));
+    container.setOpaque(false);
+    everything.add(container, BorderLayout.CENTER);
+    everything.setBorder(new EmptyBorder(15, 15, 15, 15));
+    everything.setOpaque(false);
+    JScrollPane scrollPane = new JScrollPane(everything);
+    scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    // Just like the JTextField later, the difference between this
+    // and setBorder(null) is that null is the OS default (from what I've read)
+    scrollPane.setBorder(BorderFactory.createEmptyBorder());
+    //scrollPane.setBackground(FORWARD_BACK);
+    scrollPane.getViewport().setBackground(FORWARD_BACK);
+    instructions = new JFrame();
+    instructions.setContentPane(scrollPane);
+    instructions.setSize(448, 576);
     // The difference between the instructions window
     // and the settings window is that the instructions
     // window should reappear in the same spot that
     // it last was when the user closed it
-    instructions = new JFrame();
-    instructions.setSize(300, 300);
     instructions.setLocationRelativeTo(null);
+    instructions.setResizable(false);
+    instructions.setVisible(true);
+  }
+
+  public static JPanel createDiagram(String path) {
+    JPanel panel = new JPanel();
+    JLabel label = new JLabel(createImageIcon(path));
+    panel.add(label);
+    panel.setOpaque(false);
+    return panel;
+  }
+
+  public static JTextArea createTextArea(String text) {
+    JTextArea textArea = new JTextArea(text);
+    textArea.setEditable(false);
+    textArea.setLineWrap(true);
+    textArea.setWrapStyleWord(true);
+    textArea.setBorder(new EmptyBorder(12, 0, 4, 0));
+    textArea.setForeground(FORE);
+    textArea.setFont(BODY_FONT);
+    textArea.setOpaque(false);
+    return textArea;
   }
 
   private Game() {
@@ -324,7 +379,7 @@ public class Game extends JPanel implements ActionListener {
     JPanel bottom = new JPanel();
     status = new JLabel(" ");
     status.setForeground(FORE);
-    status.setFont(BODY_FONT);
+    status.setFont(NOTIFICATION_FONT);
     bottom.add(status);
     bottom.setOpaque(false);
     container.add(bottom, BorderLayout.SOUTH);
