@@ -106,7 +106,7 @@ public class Game extends JPanel implements ActionListener {
         setTile(update, state.currentTurn);
       }
 
-      setHighlightedTiles();
+      //setHighlightedTiles();
 
       if (isDone) {
         status.setText("The game is finished.");
@@ -561,7 +561,7 @@ public class Game extends JPanel implements ActionListener {
       setTile(pos, val);
     }
 
-    setHighlightedTiles();
+    //setHighlightedTiles();
     // So apparently you should repaint and revalidate a container
     // whenever components are added or removed
     // Just as a note to myself
@@ -662,7 +662,7 @@ public class Game extends JPanel implements ActionListener {
         }
       }
 
-      setHighlightedTiles();
+      //setHighlightedTiles();
     } else if ("play".equals(actionCommand)) {
       int value = getPlayerCountFieldValue();
 
