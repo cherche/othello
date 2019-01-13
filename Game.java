@@ -374,7 +374,7 @@ public class Game extends JPanel implements ActionListener {
     JLabel label = new JLabel(createImageIcon("icons/menu/player-count.png"));
     label.setBorder(new EmptyBorder(0, 15, 0, 5));
     pair.add(label);
-    JTextField field = new JTextField("2", 2);
+    JTextField field = new JTextField(String.valueOf(playerCount), 2);
     field.setFont(INFO_FONT);
     field.setForeground(FORE);
     field.setOpaque(false);
@@ -530,7 +530,7 @@ public class Game extends JPanel implements ActionListener {
       Object[] options = { "Continue", "Cancel" };
       JOptionPane.showOptionDialog(null, "Your progress will not be saved.", "Warning", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
       */
-      int choice = JOptionPane.showConfirmDialog(null, "Are you sure you wish to exit to the main menu? Your game will not be saved.", "Warning", JOptionPane.YES_NO_OPTION);
+      int choice = JOptionPane.showConfirmDialog(frame, "Are you sure you wish to exit to the main menu? Your game will not be saved.", "Warning", JOptionPane.YES_NO_OPTION);
 
       if (choice == 0) {
         setSidebarMode(false);
