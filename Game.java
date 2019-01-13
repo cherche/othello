@@ -161,12 +161,12 @@ public class Game extends JPanel implements ActionListener {
     everything.add(heading, BorderLayout.NORTH);
     JPanel container = new JPanel();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-    container.add(createTextArea("1. Capture stones by surrounding them on both sides (horizontally, vertically, or diagonally) with your own."));
+    container.add(createTextArea("1. Capture tiles by surrounding them on both sides (horizontally, vertically, or diagonally) with your own."));
     container.add(createDiagram("images/1.png"));
-    container.add(createTextArea("2. Your turn will be skipped if, and only if, you cannot capture any stones."));
+    container.add(createTextArea("2. Your turn will be skipped if, and only if, you cannot capture any tiles."));
     container.add(createTextArea("3. Once all players skip in a row, the game is over. Although this will inevitably happen when the board is full, it could occur earlier."));
     container.add(createDiagram("images/3.png"));
-    container.add(createTextArea("4. The player with the most tiles at the end of the game wins."));
+    container.add(createTextArea("4. At the end of the game, the player with the most tiles wins."));
     container.add(createDiagram("images/4.png"));
     container.setOpaque(false);
     everything.add(container, BorderLayout.CENTER);
@@ -189,7 +189,6 @@ public class Game extends JPanel implements ActionListener {
     // it last was when the user closed it
     instructions.setLocationRelativeTo(null);
     instructions.setResizable(false);
-    instructions.setVisible(true);
   }
 
   public static JPanel createDiagram(String path) {
