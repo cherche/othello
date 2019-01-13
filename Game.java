@@ -562,6 +562,12 @@ public class Game extends JPanel implements ActionListener {
     }
 
     setHighlightedTiles();
+    // So apparently you should repaint and revalidate a container
+    // whenever components are added or removed
+    // Just as a note to myself
+    // https://docs.oracle.com/javase/tutorial/uiswing/components/jcomponent.html#custompaintingapi
+    board.revalidate();
+    board.repaint();
   }
 
   private static void updateCountsContainer() {
