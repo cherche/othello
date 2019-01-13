@@ -17,7 +17,9 @@ public class Game extends JPanel implements ActionListener {
   private static int height = 8;
   private static int playerCount = 2;
   private static Othello othello;
-  private static float soundEffectVolume = 1.0f;
+  private static Clip music;
+  private static double soundEffectVolume = 0.5;
+  private static double musicVolume = 1.0;
   private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 72);
   private static Font INFO_FONT = new Font("Open Sans", Font.PLAIN, 44);
   private static Font NOTIFICATION_FONT = new Font("Open Sans", Font.PLAIN, 24);
@@ -32,6 +34,7 @@ public class Game extends JPanel implements ActionListener {
   private static boolean isDone = false;
   private static JFrame settings;
   private static JSpinner soundEffectSpinner;
+  private static JSpinner musicSpinner;
   private static JFrame instructions;
   private static JFrame frame;
   private static JPanel main;
@@ -137,11 +140,17 @@ public class Game extends JPanel implements ActionListener {
     // in the height, which means that, for example, a window size
     //  of (600, 500) would leave maybe (600, 480) for our actual content
     frame.pack();
-    //frame.setResizable(false);
     // Centres the window on the screen
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    initMusic();
+  }
+
+  private static void initMusic() {
+    music = playClip("audio/luminous-rain.wav", 0);
+    setClipVolume(music, musicVolume);
+    music.loop(Clip.LOOP_CONTINUOUSLY);
   }
 
   private void initSettings() {
@@ -153,17 +162,27 @@ public class Game extends JPanel implements ActionListener {
     soundEffectLabel.setFont(BODY_FONT);
     soundEffectLabel.setForeground(FORE);
     soundEffectPanel.add(soundEffectLabel);
-    soundEffectSpinner = new JSpinner(new SpinnerNumberModel(100, 0, 100, 1));
+    soundEffectSpinner = new JSpinner(new SpinnerNumberModel((int) (soundEffectVolume * 100), 0, 100, 1));
     soundEffectSpinner.setFont(BODY_FONT);
     soundEffectSpinner.setForeground(FORE);
-    soundEffectSpinner.setOpaque(false);
-    soundEffectSpinner.setBorder(BorderFactory.createEmptyBorder());
     soundEffectPanel.add(soundEffectSpinner);
-    soundEffectPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+    soundEffectPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
     soundEffectPanel.setOpaque(false);
     container.add(soundEffectPanel);
+    JPanel musicPanel = new JPanel();
+    JLabel musicLabel = new JLabel("Music Volume");
+    musicLabel.setFont(BODY_FONT);
+    musicLabel.setForeground(FORE);
+    musicPanel.add(musicLabel);
+    musicSpinner = new JSpinner(new SpinnerNumberModel((int) (musicVolume * 100), 0, 100, 1));
+    musicSpinner.setFont(BODY_FONT);
+    musicSpinner.setForeground(FORE);
+    musicPanel.add(musicSpinner);
+    musicPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    musicPanel.setOpaque(false);
+    container.add(musicPanel);
     JButton apply = createIconButton("icons/settings/apply.png", "apply", this);
-    apply.setAlignmentX(Component.RIGHT_ALIGNMENT);
+    apply.setAlignmentX(Component.CENTER_ALIGNMENT);
     container.add(apply);
     // I think it's better practice to give the border to a container
     // rather than giving it to the content pane
@@ -176,7 +195,7 @@ public class Game extends JPanel implements ActionListener {
     // I just want the settings window to be as small as possible
     settings.pack();
     settings.setResizable(false);
-    settings.setLocationRelativeTo(null);
+    settings.setLocation(0, 0);
   }
 
   // Thank God we don't need to do crazy stuff like this in web development
@@ -495,12 +514,14 @@ public class Game extends JPanel implements ActionListener {
 
     if ("apply".equals(actionCommand)) {
       soundEffectVolume = ((Integer) soundEffectSpinner.getValue()).floatValue() / 100;
+      musicVolume = ((Integer) musicSpinner.getValue()).floatValue() / 100;
+      setClipVolume(music, musicVolume);
     } else if ("instructions".equals(actionCommand)) {
       instructions.setVisible(true);
     } else if ("settings".equals(actionCommand)) {
       // It would suck if we reset the location while the window was still visible
       if (!settings.isVisible()) {
-        settings.setLocationRelativeTo(null);
+        settings.setLocation(0, 0);
       }
 
       settings.setVisible(true);
@@ -638,7 +659,7 @@ public class Game extends JPanel implements ActionListener {
     }
   }
 
-  private static void playClip(String path, float gain) {
+  private static Clip playClip(String path, float gain) {
 
     // We need the try-catch since there is some chance that the path is wrong
     // or that the audio file isn't acceptable
@@ -650,19 +671,26 @@ public class Game extends JPanel implements ActionListener {
       FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
       gainControl.setValue(gain);
       clip.start();
+      return clip;
     } catch (Exception e) {
       System.out.println("Cannot open resource at \"" + path + "\".");
+      return null;
     }
   }
 
   private static void playSoundEffect(String path) {
-    // This is a little hack-y, but since gain is in decibels,
-    // we technically can never have total silence
-    // In this case, we do actually want silence
-    if (soundEffectVolume == 0f) {
-      return;
-    }
+    float gain = volumeInDecibels(soundEffectVolume);
+    // We better hope that this doesn't throw gigantic numbers at us
+    playClip(path, gain);
+  }
 
+  private static void setClipVolume(Clip clip, double volume) {
+    FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+    float gain = volumeInDecibels(volume);
+    gainControl.setValue(gain);
+  }
+
+  private static float volumeInDecibels(double volume) {
     // Suppose that I is the intensity of the sound,
     // I_0 is defined to be the intensity at 0 dB,
     // and \beta is the decibel measure of loudness
@@ -674,8 +702,6 @@ public class Game extends JPanel implements ActionListener {
     // \beta_2 - \beta_1 = 10log_10(I_2 / I_1)
     // Substituting I_1 with 1 finally yields
     // \beta_2 - \beta_1 = 10log_10(I_2)
-    float gain = (float) (10 * (Math.log(soundEffectVolume) / Math.log(10)));
-    // We better hope that this doesn't throw gigantic numbers at us
-    playClip(path, gain);
+    return (float) (10 * Math.log(volume) / Math.log(10));
   }
 }
