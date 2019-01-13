@@ -98,16 +98,15 @@ public class Game extends JPanel implements ActionListener {
       State state = othello.makeMove(pos);
       isDone = state.isDone;
       updateCountPanels();
-      setHighlightedTiles();
       status.setText(" ");
       ArrayList<int[]> updates = state.updates;
-      int TILE_PLACED_VARIANTS = 3;
-      int clipName = ((int) (Math.random() * TILE_PLACED_VARIANTS));
 
       for (int i = 0; i < updates.size(); i++) {
         int[] update = updates.get(i);
         setTile(update, state.currentTurn);
       }
+
+      setHighlightedTiles();
 
       if (isDone) {
         status.setText("The game is finished.");
@@ -118,8 +117,11 @@ public class Game extends JPanel implements ActionListener {
 
       if (state.nextTurn != (state.currentTurn + 1) % playerCount) {
         status.setText("Turns were skipped.");
+        playSoundEffect("audio/turn-skipped.wav");
       }
 
+      int TILE_PLACED_VARIANTS = 3;
+      int clipName = ((int) (Math.random() * TILE_PLACED_VARIANTS));
       playSoundEffect("audio/tile-placed/" + clipName + ".wav");
       indicator.setIcon(indicatorIcons[state.nextTurn]);
     }
@@ -642,7 +644,6 @@ public class Game extends JPanel implements ActionListener {
       isDone = false;
       othello.undo();
       updateCountPanels();
-      setHighlightedTiles();
       indicator.setIcon(indicatorIcons[othello.getTurn()]);
       playSoundEffect("audio/undo.wav");
       status.setText("The last move was undone.");
@@ -654,6 +655,8 @@ public class Game extends JPanel implements ActionListener {
           setTile(pos, value - 1);
         }
       }
+
+      setHighlightedTiles();
     } else if ("play".equals(actionCommand)) {
       int value = getPlayerCountFieldValue();
 
