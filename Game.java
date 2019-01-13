@@ -17,6 +17,7 @@ public class Game extends JPanel implements ActionListener {
   private static int height = 8;
   private static int playerCount = 2;
   private static Othello othello;
+  private static float soundEffectVolume = 1.0f;
   private static Font TITLE_FONT = new Font("Gill Sans", Font.PLAIN, 72);
   private static Font INFO_FONT = new Font("Open Sans", Font.PLAIN, 44);
   private static Font NOTIFICATION_FONT = new Font("Open Sans", Font.PLAIN, 24);
@@ -28,9 +29,9 @@ public class Game extends JPanel implements ActionListener {
   private static Color BOARD_BACK = new Color(0, 187, 84);
   private static Color BOARD_OUTLINE = BOARD_BACK.darker();
   private static int MAX_PLAYER_COUNT = 4;
-  private static float SOUND_EFFECT_VOLUME = 1.0f;
   private static boolean isDone = false;
   private static JFrame settings;
+  private static JSpinner soundEffectSpinner;
   private static JFrame instructions;
   private static JFrame frame;
   private static JPanel main;
@@ -141,25 +142,46 @@ public class Game extends JPanel implements ActionListener {
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    initSettings();
-    initInstructions();
   }
 
-  private static void initSettings() {
+  private void initSettings() {
+    JPanel content = new JPanel();
+    JPanel container = new JPanel();
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    JPanel soundEffectPanel = new JPanel();
+    JLabel soundEffectLabel = new JLabel("Sound Effect Volume");
+    soundEffectPanel.add(soundEffectLabel);
+    soundEffectSpinner = new JSpinner(new SpinnerNumberModel(100, 0, 100, 1));
+    soundEffectPanel.add(soundEffectSpinner);
+    soundEffectPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+    container.add(soundEffectPanel);
+    JButton apply = new JButton("Apply");
+    apply.setActionCommand("apply");
+    apply.addActionListener(this);
+    apply.setAlignmentX(Component.RIGHT_ALIGNMENT);
+    container.add(apply);
+    // I think it's better practice to give the border to a container
+    // rather than giving it to the content pane
+    container.setBorder(new EmptyBorder(5, 15, 5, 15));
+    content.add(container);
     settings = new JFrame();
-    settings.setSize(300, 300);
+    settings.setContentPane(content);
+    // I just want the settings window to be as small as possible
+    settings.pack();
+    settings.setResizable(false);
+    settings.setLocationRelativeTo(null);
   }
 
   // Thank God we don't need to do crazy stuff like this in web development
   // Could you imagine making THIS many containers to display a webpage
   // as we know it? It would be so frustrating.
   private static void initInstructions () {
-    JPanel everything = new JPanel(new BorderLayout());
+    JPanel content = new JPanel(new BorderLayout());
     JLabel heading = new JLabel("Instructions");
     heading.setFont(HEADING_FONT);
     heading.setForeground(FORE);
     heading.setHorizontalAlignment(JLabel.CENTER);
-    everything.add(heading, BorderLayout.NORTH);
+    content.add(heading, BorderLayout.NORTH);
     JPanel container = new JPanel();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(createTextArea("1. Capture tiles by surrounding them on both sides (horizontally, vertically, or diagonally) with your own."));
@@ -170,10 +192,10 @@ public class Game extends JPanel implements ActionListener {
     container.add(createTextArea("4. At the end of the game, the player with the most tiles wins."));
     container.add(createDiagram("images/4.png"));
     container.setOpaque(false);
-    everything.add(container, BorderLayout.CENTER);
-    everything.setBorder(new EmptyBorder(15, 15, 15, 15));
-    everything.setOpaque(false);
-    JScrollPane scrollPane = new JScrollPane(everything);
+    content.add(container, BorderLayout.CENTER);
+    content.setBorder(new EmptyBorder(15, 15, 15, 15));
+    content.setOpaque(false);
+    JScrollPane scrollPane = new JScrollPane(content);
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
     scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     // Just like the JTextField later, the difference between this
@@ -184,12 +206,12 @@ public class Game extends JPanel implements ActionListener {
     instructions = new JFrame();
     instructions.setContentPane(scrollPane);
     instructions.setSize(448, 576);
+    instructions.setResizable(false);
     // The difference between the instructions window
     // and the settings window is that the instructions
     // window should reappear in the same spot that
     // it last was when the user closed it
     instructions.setLocationRelativeTo(null);
-    instructions.setResizable(false);
   }
 
   public static JPanel createDiagram(String path) {
@@ -213,6 +235,8 @@ public class Game extends JPanel implements ActionListener {
   }
 
   private Game() {
+    initSettings();
+    initInstructions();
     this.setLayout(new BorderLayout());
     JPanel sidebar = initSidebar();
     this.add(sidebar, BorderLayout.WEST);
@@ -462,10 +486,16 @@ public class Game extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     String actionCommand = e.getActionCommand();
 
-    if ("instructions".equals(actionCommand)) {
+    if ("apply".equals(actionCommand)) {
+      soundEffectVolume = ((Integer) soundEffectSpinner.getValue()).floatValue() / 100;
+    } else if ("instructions".equals(actionCommand)) {
       instructions.setVisible(true);
     } else if ("settings".equals(actionCommand)) {
-      settings.setLocation(0, 0);
+      // It would suck if we reset the location while the window was still visible
+      if (!settings.isVisible()) {
+        settings.setLocationRelativeTo(null);
+      }
+
       settings.setVisible(true);
     } else if ("home".equals(actionCommand)) {
       /* Something like this to make sure they don't lose everything
@@ -622,7 +652,7 @@ public class Game extends JPanel implements ActionListener {
     // This is a little hack-y, but since gain is in decibels,
     // we technically can never have total silence
     // In this case, we do actually want silence
-    if (SOUND_EFFECT_VOLUME == 0f) {
+    if (soundEffectVolume == 0f) {
       return;
     }
 
@@ -637,7 +667,7 @@ public class Game extends JPanel implements ActionListener {
     // \beta_2 - \beta_1 = 10log_10(I_2 / I_1)
     // Substituting I_1 with 1 finally yields
     // \beta_2 - \beta_1 = 10log_10(I_2)
-    float gain = (float) (10 * (Math.log(SOUND_EFFECT_VOLUME) / Math.log(10)));
+    float gain = (float) (10 * (Math.log(soundEffectVolume) / Math.log(10)));
     // We better hope that this doesn't throw gigantic numbers at us
     playClip(path, gain);
   }
