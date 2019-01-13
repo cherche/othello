@@ -150,20 +150,27 @@ public class Game extends JPanel implements ActionListener {
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     JPanel soundEffectPanel = new JPanel();
     JLabel soundEffectLabel = new JLabel("Sound Effect Volume");
+    soundEffectLabel.setFont(BODY_FONT);
+    soundEffectLabel.setForeground(FORE);
     soundEffectPanel.add(soundEffectLabel);
     soundEffectSpinner = new JSpinner(new SpinnerNumberModel(100, 0, 100, 1));
+    soundEffectSpinner.setFont(BODY_FONT);
+    soundEffectSpinner.setForeground(FORE);
+    soundEffectSpinner.setOpaque(false);
+    soundEffectSpinner.setBorder(BorderFactory.createEmptyBorder());
     soundEffectPanel.add(soundEffectSpinner);
     soundEffectPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+    soundEffectPanel.setOpaque(false);
     container.add(soundEffectPanel);
-    JButton apply = new JButton("Apply");
-    apply.setActionCommand("apply");
-    apply.addActionListener(this);
+    JButton apply = createIconButton("icons/settings/apply.png", "apply", this);
     apply.setAlignmentX(Component.RIGHT_ALIGNMENT);
     container.add(apply);
     // I think it's better practice to give the border to a container
     // rather than giving it to the content pane
     container.setBorder(new EmptyBorder(5, 15, 5, 15));
+    container.setOpaque(false);
     content.add(container);
+    content.setBackground(FORWARD_BACK);
     settings = new JFrame();
     settings.setContentPane(content);
     // I just want the settings window to be as small as possible
