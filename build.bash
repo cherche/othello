@@ -1,2 +1,2 @@
 #!/usr/bin/bash
-javac Game.java && jar cvfe Othello.jar Game *.class audio icons images
+javac Game.java && jar cvfe OthelloGame.jar Game *.class audio icons images
